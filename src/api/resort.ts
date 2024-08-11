@@ -29,6 +29,7 @@ export interface Experience {
   geo?: readonly [number, number];
   type?: ExperienceType;
   avgWait?: number;
+  tier?: number;
   priority?: number;
   dropTimes?: string[];
 }
