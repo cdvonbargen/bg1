@@ -6,40 +6,45 @@ import { useBookingDate } from './BookingDate';
 
 export interface Rebooking {
   current: LightningLane | undefined;
-  begin: (booking: LightningLane) => void;
+  auto: boolean;
+  begin: (booking: LightningLane, auto?: boolean) => void;
   end: () => void;
   prevBookingDate?: string;
 }
 
 export const RebookingContext = createContext<Rebooking>({
   current: undefined,
+  auto: false,
   begin: () => undefined,
   end: () => undefined,
 });
 export const useRebooking = () => useContext(RebookingContext);
 
-export function RebookingProvider({
-  children,
-  current,
-}: {
-  children: React.ReactNode;
-  current?: LightningLane;
-}) {
+export function RebookingProvider({ children }: { children: React.ReactNode }) {
   const { setBookingDate } = useBookingDate();
   const [rebooking, setRebooking] = useState<Rebooking>(() => ({
-    current,
-    begin: (booking: LightningLane) => {
+    current: undefined,
+    auto: false,
+    begin: (booking: LightningLane, auto = false) => {
       setBookingDate(date => {
-        setRebooking({ ...rebooking, current: booking, prevBookingDate: date });
+        setRebooking(rb =>
+          booking === rb.current
+            ? rb
+            : { ...rb, current: booking, auto, prevBookingDate: date }
+        );
         return booking.start.date;
       });
     },
     end: () => {
-      setRebooking(rebooking => {
-        if (rebooking.prevBookingDate) {
-          setBookingDate(rebooking.prevBookingDate);
-        }
-        return { ...rebooking, current: undefined, prevBookingDate: undefined };
+      setRebooking(rb => {
+        if (!rb.current) return rb;
+        if (rb.prevBookingDate) setBookingDate(rb.prevBookingDate);
+        return {
+          ...rb,
+          current: undefined,
+          auto: false,
+          prevBookingDate: undefined,
+        };
       });
     },
   }));

@@ -10,16 +10,23 @@ import {
   renderResort,
 } from '@/__fixtures__/ll';
 import { RequestError } from '@/api/client';
+import { LightningLane } from '@/api/itinerary';
 import { OfferError } from '@/api/ll';
+import Button from '@/components/Button';
+import Screen from '@/components/Screen';
 import { BookingDateProvider } from '@/contexts/BookingDate';
-import { Nav } from '@/contexts/Nav';
-import { RebookingContext } from '@/contexts/Rebooking';
+import { Nav, useNav } from '@/contexts/Nav';
+import { PlansContext } from '@/contexts/Plans';
+import { RebookingContext, RebookingProvider } from '@/contexts/Rebooking';
 import { parkDate } from '@/datetime';
 import { ping } from '@/ping';
 import { TODAY, click, loading, screen, see, setTime } from '@/testing';
 
+import BookingListing from '../../BookingListing';
+import RebookingHeader from '../../RebookingHeader';
 import BookExperience from '../BookExperience';
 
+jest.mock('@/components/ll/BookingListing');
 jest.mock('@/ping');
 jest.mock('@/timesync');
 setTime('09:00');
@@ -53,31 +60,53 @@ async function clickConfirm() {
   await see.screen('Lightning Lane');
 }
 
-async function renderComponent({
-  modify = false,
-}: {
-  modify?: boolean;
-} = {}) {
-  const rebooking = {
-    current: modify ? booking : undefined,
-    begin: jest.fn(),
-    end: jest.fn(),
-  };
+function expectModifying() {
+  see('Modifying Reservation');
+  expect(BookingListing).toHaveBeenCalledWith(
+    expect.objectContaining({ booking }),
+    {}
+  );
+  booking.guests.forEach(g => see(g.name));
+  expect(ll.offer).toHaveBeenCalledWith(hm, booking.guests, { booking });
+}
+
+function StartScreen() {
+  const { goTo } = useNav();
+  return (
+    <Screen title="Start">
+      <RebookingHeader />
+      <Button onClick={() => goTo(<BookExperience experience={hm} />)}>
+        Start Test
+      </Button>
+    </Screen>
+  );
+}
+
+async function renderComponent(current?: LightningLane) {
   renderResort(
-    <BookingDateProvider>
-      <RebookingContext.Provider value={rebooking}>
-        <Nav>
-          <BookExperience experience={hm} />
-        </Nav>
-      </RebookingContext.Provider>
-    </BookingDateProvider>
+    <PlansContext.Provider
+      value={{ plans: [booking], refreshPlans: () => {}, loaderElem: null }}
+    >
+      <BookingDateProvider>
+        <RebookingContext.Provider
+          value={{ current, auto: false, begin: () => {}, end: () => {} }}
+        >
+          <Nav>
+            <BookExperience experience={hm} />
+          </Nav>
+        </RebookingContext.Provider>
+      </BookingDateProvider>
+    </PlansContext.Provider>
   );
   await loading();
 }
 
 describe('BookExperience', () => {
+  const { maxPartySize } = ll.rules;
+
   beforeEach(() => {
     jest.clearAllMocks();
+    ll.rules.maxPartySize = maxPartySize;
   });
 
   it('performs successful booking', async () => {
@@ -254,7 +283,41 @@ describe('BookExperience', () => {
   });
 
   it('can modify an existing reservation', async () => {
-    await renderComponent({ modify: true });
+    await renderComponent(booking);
     expect(ll.guests).not.toHaveBeenCalled();
+    expectModifying();
+  });
+
+  it('can modify same experience even if rebooking not started', async () => {
+    ll.guests.mockResolvedValueOnce({
+      eligible: [],
+      ineligible: [
+        ...booking.guests.map(g => ({
+          ...g,
+          ineligibleReason: 'EXPERIENCE_LIMIT_REACHED' as const,
+        })),
+        donald,
+      ],
+    });
+    renderResort(
+      <PlansContext.Provider
+        value={{ plans: [booking], refreshPlans: () => {}, loaderElem: null }}
+      >
+        <BookingDateProvider>
+          <RebookingProvider>
+            <Nav>
+              <StartScreen />
+            </Nav>
+          </RebookingProvider>
+        </BookingDateProvider>
+      </PlansContext.Provider>
+    );
+    click('Start Test');
+    await see.screen('Lightning Lane');
+    await loading();
+    expectModifying();
+    click('Go Back');
+    await see.screen('Start');
+    see.no('Modifying Reservation');
   });
 });

@@ -12,6 +12,7 @@ setTime('10:00');
 const rebooking = {
   begin: () => null,
   end: jest.fn(),
+  auto: false,
   current: booking as typeof booking | undefined,
 };
 

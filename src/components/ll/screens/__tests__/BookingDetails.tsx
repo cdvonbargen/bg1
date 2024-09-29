@@ -43,7 +43,12 @@ import SelectReturnTime from '../SelectReturnTime';
 
 jest.mock('@/contexts/Nav');
 setTime('09:00');
-const rebooking = { begin: jest.fn(), end: jest.fn(), current: undefined };
+const rebooking = {
+  begin: jest.fn(),
+  end: jest.fn(),
+  current: undefined,
+  auto: false,
+};
 const setPark = jest.fn();
 
 function renderComponent(booking: Booking, isNew = false) {

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { LightningLane, isType } from '@/api/itinerary';
 import { Guest, Offer, OfferError, OfferExperience } from '@/api/ll';
 import FloatingButton from '@/components/FloatingButton';
 import Screen from '@/components/Screen';
@@ -31,7 +32,7 @@ export default function BookExperience({
   const { goTo } = useNav();
   const resort = useResort();
   const { ll } = useClients();
-  const { refreshPlans } = usePlans();
+  const { plans, refreshPlans } = usePlans();
   const { bookingDate } = useBookingDate();
   const rebooking = useRebooking();
   const [party, setParty] = useState<Party>();
@@ -69,6 +70,21 @@ export default function BookExperience({
       const guests = rebooking.current
         ? { eligible: rebooking.current.guests, ineligible: [] }
         : await ll.guests(experience, bookingDate);
+
+      // Detect if there's an existing LL for this experience we can modify
+      if (
+        guests.eligible.length === 0 &&
+        guests.ineligible.some(
+          g => g.ineligibleReason === 'EXPERIENCE_LIMIT_REACHED'
+        )
+      ) {
+        const booking = plans.find(
+          (b): b is LightningLane =>
+            b.id === experience.id && !!b.modifiable && isType(b, 'LL', 'MP')
+        );
+        if (booking) return rebooking.begin(booking, true);
+      }
+
       setParty({
         ...guests,
         selected: guests.eligible.slice(0, ll.rules.maxPartySize),
@@ -86,11 +102,17 @@ export default function BookExperience({
         experience,
       });
     });
-  }, [ll, experience, bookingDate, rebooking, loadData]);
+  }, [plans, ll, experience, bookingDate, rebooking, loadData]);
 
   useEffect(() => {
     if (!party) loadParty();
   }, [party, loadParty]);
+
+  useEffect(() => {
+    return () => {
+      if (rebooking.auto) rebooking.end();
+    };
+  }, [rebooking]);
 
   const refreshOffer = useCallback(
     (first = false) => {

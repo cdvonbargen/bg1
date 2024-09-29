@@ -15,6 +15,7 @@ function renderComponent({
 } = {}) {
   const rebooking = {
     current: modify ? booking : undefined,
+    auto: false,
     begin: jest.fn(),
     end: jest.fn(),
   };

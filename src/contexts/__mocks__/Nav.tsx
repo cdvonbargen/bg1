@@ -8,3 +8,8 @@ const nav = {
 export const useNav = () => nav;
 
 export const useScreens = () => ({ current: <div />, prev: <div /> });
+
+export const useScreenState = jest.fn(() => ({
+  isActiveScreen: true,
+  isFirstScreen: false,
+}));
