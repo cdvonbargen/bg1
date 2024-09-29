@@ -8,6 +8,7 @@ import {
   GuestsResponse,
   LLClient,
   Offer,
+  OfferError,
   OfferExperience,
   throwOnNotModifiable,
 } from '../ll';
@@ -94,17 +95,18 @@ export class LLClientDLR extends LLClient {
       },
     });
     import('../diu'); // preload
+    const party = {
+      eligible: (eligibleGuests || []).map(this.convertGuest),
+      ineligible: (ineligibleGuests || []).map(this.convertGuest),
+    };
+    if (status !== 'ACTIVE') throw new OfferError(party);
     return {
       id,
       start: { date, time: startTime },
       end: { date, time: endTime },
-      active: status === 'ACTIVE',
       changed: changeStatus !== 'NONE',
       booking: booking as B,
-      guests: {
-        eligible: (eligibleGuests || []).map(this.convertGuest),
-        ineligible: (ineligibleGuests || []).map(this.convertGuest),
-      },
+      guests: party,
       experience,
     };
   }

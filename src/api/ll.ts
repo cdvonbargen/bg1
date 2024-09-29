@@ -127,7 +127,6 @@ export interface Offer<B = LightningLane | undefined> {
   id: string;
   start: DateTime;
   end: DateTime;
-  active: boolean;
   changed: boolean;
   guests: {
     eligible: Guest[];
@@ -157,6 +156,13 @@ export class ModifyNotAllowed extends Error {
 export function throwOnNotModifiable(booking?: Booking) {
   if (booking && !booking.modifiable) {
     throw new ModifyNotAllowed();
+  }
+}
+
+export class OfferError extends Error {
+  readonly name = 'OfferError';
+  constructor(readonly guests: Guests) {
+    super('Offer request failed');
   }
 }
 
@@ -289,8 +295,8 @@ export abstract class LLClient extends ApiClient {
     return super.request<T>(request);
   }
 
-  protected parseGuestData(response: GuestsResponse) {
-    const { guests, ineligibleGuests } = response;
+  protected parseGuestData(data: GuestsResponse): Guests {
+    const { guests, ineligibleGuests } = data;
     const ineligible = ineligibleGuests.map(this.convertGuest);
     const eligible = guests
       .map(this.convertGuest)

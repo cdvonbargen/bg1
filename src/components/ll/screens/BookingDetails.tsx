@@ -141,7 +141,7 @@ export default function BookingDetails({
                         />
                       );
                     },
-                    { messages: { 410: 'No other times available' } }
+                    { messages: { OfferError: 'No other times available' } }
                   );
                 }}
               >

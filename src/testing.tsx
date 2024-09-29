@@ -122,6 +122,14 @@ export async function loading() {
   }
 }
 
+export async function caught(callback: () => Promise<unknown>) {
+  try {
+    await callback();
+  } catch (error) {
+    return error;
+  }
+}
+
 export function setTime(time: string, minutes = 0) {
   const now = new Date(`${TODAY}T${time}-0400`);
   jest.useFakeTimers({ now });

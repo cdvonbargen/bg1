@@ -238,7 +238,6 @@ export const offer: Offer<undefined> = {
   offerSetId: 'set123',
   start: { date: TODAY, time: '11:10:00' },
   end: { date: TODAY, time: '12:10:00' },
-  active: true,
   changed: false,
   guests: {
     eligible: [mickey, minnie, pluto],

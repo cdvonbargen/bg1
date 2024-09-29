@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Guest, Offer, OfferExperience } from '@/api/ll';
+import { Guest, Offer, OfferError, OfferExperience } from '@/api/ll';
 import FloatingButton from '@/components/FloatingButton';
 import Screen from '@/components/Screen';
 import { useBookingDate } from '@/contexts/BookingDate';
@@ -95,13 +95,25 @@ export default function BookExperience({
   const refreshOffer = useCallback(
     (first = false) => {
       if (!party || party.selected.length === 0) return;
+
+      function updateParty({ guests }: Pick<Offer, 'guests'>) {
+        setParty(party => ({
+          ...(party as Party),
+          ...guests,
+          selected: guests.eligible,
+        }));
+      }
+
       loadData(
         async () => {
           try {
-            const newOffer = await ll.offer(experience, party.selected, {
-              booking: rebooking.current,
-              date: bookingDate,
-            });
+            const newOffer = await ll.offer(
+              experience,
+              party.selected,
+              rebooking.current
+                ? { booking: rebooking.current }
+                : { date: bookingDate }
+            );
             const { ineligible } = newOffer.guests;
             if (ineligible.length > 0) {
               const ineligibleIds = new Set(ineligible.map(g => g.id));
@@ -113,16 +125,12 @@ export default function BookExperience({
                 selected: party.selected.filter(isEligible),
               });
             }
-            if (newOffer.active) {
-              // If the user is intentionally refreshing, we don't need to warn
-              // them that the offer has changed
-              if (!first) newOffer.changed = false;
-              setOffer(newOffer);
-            } else {
-              setOffer(offer => offer ?? null);
-            }
+            if (!first) newOffer.changed = false;
+            setOffer(newOffer);
+            if (ineligible.length > 0) updateParty(newOffer);
           } catch (error) {
-            if (first) setOffer(offer => offer ?? null);
+            setOffer(offer => offer ?? null);
+            if (error instanceof OfferError) return updateParty(error);
             throw error;
           }
         },

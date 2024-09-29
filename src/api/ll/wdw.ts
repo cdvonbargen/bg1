@@ -1,6 +1,5 @@
 import { DateTime, parkDate, splitDateTime, timeToMinutes } from '@/datetime';
 
-import { RequestError } from '../client';
 import {
   ApiGuest,
   Guest,
@@ -10,6 +9,7 @@ import {
   LLClient,
   LightningLane,
   Offer,
+  OfferError,
   OfferExperience,
   OrderDetails,
   Slot,
@@ -53,10 +53,10 @@ interface EventItem extends OfferSetItineraryItem {
 }
 
 interface OfferSetResponse {
-  itinerary: {
+  itinerary?: {
     items: (OfferItem | ExistingItem | EventItem)[];
   };
-  offerSetGroup: {
+  offerSetGroup?: {
     expirySeconds: number;
     offerSets: {
       offerSetId: string;
@@ -68,10 +68,7 @@ interface OfferSetResponse {
       expiryDateTime: string;
     }[];
   };
-  party: {
-    guests: ApiGuest[];
-    ineligibleGuests: ApiGuest[];
-  };
+  party: GuestsResponse;
 }
 
 export interface NewBookingResponse {
@@ -81,10 +78,7 @@ export interface NewBookingResponse {
     endDateTime: string;
     guests: { entitlementId: string; guestId: string }[];
   }[];
-  party: {
-    guests: ApiGuest[];
-    ineligibleGuests: ApiGuest[];
-  };
+  party: GuestsResponse;
 }
 
 export interface ModBookingResponse {
@@ -94,10 +88,7 @@ export interface ModBookingResponse {
     endDateTime: string;
     guests: { entitlementId: string; guestId: string }[];
   };
-  party: {
-    guests: ApiGuest[];
-    ineligibleGuests: ApiGuest[];
-  };
+  party: GuestsResponse;
 }
 
 export class LLClientWDW extends LLClient {
@@ -110,9 +101,7 @@ export class LLClientWDW extends LLClient {
 
   async guests(experience?: { id: string }, date?: string): Promise<Guests> {
     const exp = this.fallbackExperience(experience);
-    const {
-      data: { guests, ineligibleGuests },
-    } = await this.request<GuestsResponse>({
+    const { data } = await this.request<GuestsResponse>({
       path: '/ea-vas/planning/api/v1/experiences/guest/guests',
       data: {
         date: date ?? new DateTime().date,
@@ -120,14 +109,7 @@ export class LLClientWDW extends LLClient {
         parkId: exp.park.id,
       },
     });
-    return this.parseGuestData({
-      guests,
-      ineligibleGuests: ineligibleGuests.map(g =>
-        g.ineligibleReason
-          ? { ...g, ineligibleReason: g.ineligibleReason.ineligibleReason }
-          : g
-      ),
-    });
+    return this.parseGuestData(data);
   }
 
   async offer<B extends Offer['booking']>(
@@ -162,11 +144,11 @@ export class LLClientWDW extends LLClient {
             }),
       },
     });
-    const offerItem = data.itinerary.items.find(
+    const party = this.parseGuestData(data.party);
+    const offerItem = (data.itinerary ?? {}).items?.find(
       item => item.type === 'OFFER_ITEM'
-    ) as OfferItem | undefined;
-    const { guests: eligibleGuests, ineligibleGuests } = data.party;
-    if (!offerItem) throw new RequestError({ ok: false, status: 410, data });
+    );
+    if (!offerItem) throw new OfferError(party);
     const { offerSetId, offerId, startDateTime, endDateTime } = offerItem;
     const guestsById = Object.fromEntries(guests.map(g => [g.id, g]));
     let offer: Offer<B> = {
@@ -176,13 +158,9 @@ export class LLClientWDW extends LLClient {
       end: splitDateTime(endDateTime),
       experience,
       guests: {
-        eligible: eligibleGuests.map(g => ({
-          ...guestsById[g.id],
-          ...this.convertGuest(g),
-        })),
-        ineligible: ineligibleGuests.map(this.convertGuest),
+        eligible: party.eligible.map(g => ({ ...guestsById[g.id], ...g })),
+        ineligible: party.ineligible,
       },
-      active: eligibleGuests.length > 0 && ineligibleGuests.length === 0,
       changed: offerItem.conflict === 'ALTERNATIVE_TIME_FOUND',
       booking: booking as B,
     };
@@ -353,5 +331,16 @@ export class LLClientWDW extends LLClient {
         entitlementId: entIdsByGuestId[g.id],
       })),
     };
+  }
+
+  protected parseGuestData({ guests, ineligibleGuests }: GuestsResponse) {
+    return super.parseGuestData({
+      guests,
+      ineligibleGuests: ineligibleGuests.map(g =>
+        g.ineligibleReason
+          ? { ...g, ineligibleReason: g.ineligibleReason.ineligibleReason }
+          : g
+      ),
+    });
   }
 }

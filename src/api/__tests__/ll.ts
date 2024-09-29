@@ -18,10 +18,10 @@ import {
   wdw,
 } from '@/__fixtures__/ll';
 import kvdb from '@/kvdb';
-import { TODAY, TOMORROW, setTime } from '@/testing';
+import { TODAY, TOMORROW, caught, setTime } from '@/testing';
 
 import { RequestError } from '../client';
-import { LLTracker, ModifyNotAllowed } from '../ll';
+import { LLTracker, ModifyNotAllowed, OfferError } from '../ll';
 import { LLClientDLR } from '../ll/dlr';
 import { LLClientWDW } from '../ll/wdw';
 
@@ -297,6 +297,32 @@ describe('LLClientWDW', () => {
           ignoredBookedExperienceIds: null,
         },
       });
+    });
+
+    it('throws OfferError if no offer in response', async () => {
+      const response = offerSetResponse();
+      response.data.itinerary.items = [];
+      response.data.party = {
+        guests: [],
+        ineligibleGuests: booking.guests.map(g =>
+          apiGuest({
+            ...g,
+            ineligibleReason: {
+              ineligibleReason: 'EXPERIENCE_LIMIT_REACHED',
+            },
+          })
+        ),
+      };
+      respond(response);
+      expect(await caught(() => client.offer(hm, booking.guests))).toEqual(
+        new OfferError({
+          eligible: [],
+          ineligible: booking.guests.map(g => ({
+            ...g,
+            ineligibleReason: 'EXPERIENCE_LIMIT_REACHED',
+          })),
+        })
+      );
     });
 
     it('reports change', async () => {
@@ -624,32 +650,21 @@ describe('LLClientDLR', () => {
       });
     });
 
-    it('reports changes/failure', async () => {
+    it('throws OfferError if DELETED offer received', async () => {
+      const ineligible = booking.guests.map(g => ({
+        ...g,
+        ineligibleReason: 'TOO_EARLY_FOR_PARK_HOPPING' as const,
+      }));
       respond(
-        response(
-          {
-            offer: { ...offerData, status: 'DELETED', changeStatus: 'CHANGED' },
-            eligibleGuests: [],
-            ineligibleGuests: offer.guests.eligible.map(g => ({
-              ...apiGuest(g),
-              ineligibleReason: 'TOO_EARLY_FOR_PARK_HOPPING',
-            })),
-          },
-          201
-        )
+        response({
+          offer: { ...offerData, status: 'DELETED' },
+          eligibleGuests: [],
+          ineligibleGuests: ineligible.map(apiGuest),
+        })
       );
-      expect(await client.offer(hm, offer.guests.eligible)).toEqual({
-        ...dlrOffer,
-        active: false,
-        changed: true,
-        guests: {
-          eligible: [],
-          ineligible: offer.guests.eligible.map(g => ({
-            ...g,
-            ineligibleReason: 'TOO_EARLY_FOR_PARK_HOPPING',
-          })),
-        },
-      });
+      expect(await caught(() => client.offer(hm, booking.guests))).toEqual(
+        new OfferError({ eligible: [], ineligible })
+      );
     });
 
     it('throws ModifyNotAllowed when not allowed to modify', async () => {

@@ -17,8 +17,8 @@ import {
   sdd,
   sm,
 } from '@/__fixtures__/ll';
-import { RequestError } from '@/api/client';
 import { Booking, DasBooking } from '@/api/itinerary';
+import { OfferError } from '@/api/ll';
 import { useNav } from '@/contexts/Nav';
 import { ParkContext } from '@/contexts/Park';
 import { RebookingContext } from '@/contexts/Rebooking';
@@ -90,7 +90,7 @@ describe('BookingDetails', () => {
     expect(goBack).toHaveBeenCalledTimes(2);
 
     ll.offer.mockRejectedValueOnce(
-      new RequestError({ ok: false, status: 410, data: {} })
+      new OfferError({ eligible: [], ineligible: booking.guests })
     );
     click('Change');
     await loading();

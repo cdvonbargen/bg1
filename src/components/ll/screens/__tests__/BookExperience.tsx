@@ -10,6 +10,7 @@ import {
   renderResort,
 } from '@/__fixtures__/ll';
 import { RequestError } from '@/api/client';
+import { OfferError } from '@/api/ll';
 import { BookingDateProvider } from '@/contexts/BookingDate';
 import { Nav } from '@/contexts/Nav';
 import { RebookingContext } from '@/contexts/Rebooking';
@@ -182,17 +183,44 @@ describe('BookExperience', () => {
     );
   });
 
-  it('shows "No Reservations Available" when no/invalid offer', async () => {
+  it('shows "No Reservations Available" on failed response', async () => {
     ll.offer.mockRejectedValueOnce(
       new RequestError({ ok: false, status: 410, data: {} })
     );
     await renderComponent();
     see('No Reservations Available');
+  });
 
-    ll.offer.mockResolvedValueOnce({ ...offer, active: false });
-    click('Refresh Offer');
-    await loading();
+  it('shows "No Eligible Guests" on OfferError with no eligible guests', async () => {
+    ll.offer.mockRejectedValueOnce(
+      new OfferError({
+        eligible: [],
+        ineligible: booking.guests.map(g => ({
+          ...g,
+          ineligibleReason: 'EXPERIENCE_LIMIT_REACHED',
+        })),
+      })
+    );
+    await renderComponent();
+    see('No Eligible Guests');
+    expect(see.all('EXPERIENCE LIMIT REACHED')).toHaveLength(3);
+  });
+
+  it('shows "No Reservations Available" on OfferError with eligible guests', async () => {
+    ll.offer.mockRejectedValueOnce(
+      new OfferError({
+        eligible: booking.guests.slice(0, 1),
+        ineligible: booking.guests.slice(1).map(g => ({
+          ...g,
+          ineligibleReason: 'EXPERIENCE_LIMIT_REACHED',
+        })),
+      })
+    );
+    await renderComponent();
     see('No Reservations Available');
+    see(mickey.name);
+    see.no(minnie.name);
+    see.no(pluto.name);
   });
 
   it('flashes error message when booking fails', async () => {
@@ -206,9 +234,14 @@ describe('BookExperience', () => {
   });
 
   it('limits offers to maxPartySize', async () => {
-    const { maxPartySize } = ll.rules;
-    (ll as any).rules.maxPartySize = 2;
-
+    ll.rules.maxPartySize = 2;
+    ll.offer.mockResolvedValueOnce({
+      ...offer,
+      guests: {
+        eligible: offer.guests.eligible.slice(0, 2),
+        ineligible: [],
+      },
+    });
     await renderComponent();
     expect(ll.offer).toHaveBeenLastCalledWith(hm, [mickey, minnie], {
       date: parkDate(),
@@ -218,8 +251,6 @@ describe('BookExperience', () => {
     await clickModify();
     click(pluto.name);
     see('Selection limit reached');
-
-    (ll as any).rules.maxPartySize = maxPartySize;
   });
 
   it('can modify an existing reservation', async () => {
