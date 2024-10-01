@@ -77,7 +77,7 @@ export default function SelectReturnTime<B extends Offer['booking']>({
       subhead={
         <>
           <RebookingHeader />
-          <BookingDate />
+          <BookingDate booking={offer} />
         </>
       }
       theme={offer.experience.park.theme}
