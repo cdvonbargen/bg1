@@ -14,6 +14,9 @@ import {
 } from '../ll';
 import { Park } from '../resort';
 
+const FALLBACK_EXP_ID = '353295';
+const FALLBACK_PARK_ID = '330339';
+
 interface OfferResponse {
   offer: {
     id: string;
@@ -47,13 +50,14 @@ export class LLClientDLR extends LLClient {
   }
 
   async guests(experience?: { id: string }): Promise<Guests> {
-    const exp = this.fallbackExperience(experience);
     const { data } = await this.request<GuestsResponse>({
       path: '/ea-vas/api/v1/guests',
       params: {
         productType: 'FLEX',
-        experienceId: exp.id,
-        parkId: exp.park.id,
+        experienceId: experience?.id ?? FALLBACK_EXP_ID,
+        parkId: experience
+          ? this.resort.experience(experience.id).park.id
+          : FALLBACK_PARK_ID,
       },
       userId: true,
     });

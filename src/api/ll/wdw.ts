@@ -2,6 +2,7 @@ import { DateTime, parkDate, splitDateTime, timeToMinutes } from '@/datetime';
 
 import {
   ApiGuest,
+  Experience,
   Guest,
   Guests,
   HourlySlots,
@@ -15,6 +16,7 @@ import {
   Slot,
   throwOnNotModifiable,
 } from '../ll';
+import { InvalidId, Park } from '../resort';
 
 interface GuestsResponse {
   guests: ApiGuest[];
@@ -99,14 +101,51 @@ export class LLClientWDW extends LLClient {
     timeSelect: true,
   };
 
+  async experiences(park: Park, date: string): Promise<Experience[]> {
+    const exps = await super.experiences(park, date);
+    if (exps.length > 0) return exps;
+
+    const { data } = await this.request<{
+      tiers: {
+        experiences: { facilityId: string; isAvailable?: boolean }[];
+      }[];
+    }>({
+      path: `/ea-vas/planning/api/v1/experiences/availability/bundles/experiences`,
+      data: {
+        parkId: park.id,
+        date,
+        guestIds: [await this.primaryGuestId()],
+        existingOfferIds: [],
+        orderId: null,
+      },
+    });
+    return data.tiers.flatMap(t =>
+      t.experiences.flatMap(exp => {
+        if (!exp.isAvailable) return [];
+        try {
+          return {
+            type: 'ATTRACTION',
+            ...this.resort.experience(exp.facilityId),
+            flex: { available: false },
+            standby: { available: false, unavailableReason: 'CLOSED' },
+          };
+        } catch (error) {
+          if (error instanceof InvalidId) return [];
+          throw error;
+        }
+      })
+    );
+  }
+
   async guests(experience?: { id: string }, date?: string): Promise<Guests> {
-    const exp = this.fallbackExperience(experience);
     const { data } = await this.request<GuestsResponse>({
       path: '/ea-vas/planning/api/v1/experiences/guest/guests',
       data: {
         date: date ?? new DateTime().date,
-        facilityId: exp.id,
-        parkId: exp.park.id,
+        facilityId: experience?.id ?? null,
+        parkId: experience
+          ? this.resort.experience(experience.id).park.id
+          : this.resort.parks[0].id,
       },
     });
     return this.parseGuestData(data);
@@ -161,7 +200,9 @@ export class LLClientWDW extends LLClient {
         eligible: party.eligible.map(g => ({ ...guestsById[g.id], ...g })),
         ineligible: party.ineligible,
       },
-      changed: offerItem.conflict === 'ALTERNATIVE_TIME_FOUND',
+      changed:
+        offerItem.conflict === 'ALTERNATIVE_TIME_FOUND' &&
+        nextAvailableTime !== undefined,
       booking: booking as B,
     };
     // When you already have two LLs booked, the system tries to place your

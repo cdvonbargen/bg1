@@ -12,7 +12,7 @@ export default function LLButton({
   experience: FlexExperience;
 }) {
   const { goTo } = useNav();
-  const { flex } = experience;
+  const { flex, standby } = experience;
 
   return (
     <LabeledItem label="LL">
@@ -20,9 +20,11 @@ export default function LLButton({
         <Button
           onClick={() => goTo(<BookExperience experience={experience} />)}
         >
-          {flex.nextAvailableTime
-            ? displayTime(flex.nextAvailableTime)
-            : 'none'}
+          {standby.unavailableReason === 'CLOSED'
+            ? 'Book'
+            : flex.nextAvailableTime
+              ? displayTime(flex.nextAvailableTime)
+              : 'none'}
         </Button>
       </span>
     </LabeledItem>

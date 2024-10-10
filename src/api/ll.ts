@@ -23,7 +23,8 @@ interface ApiExperience {
     unavailableReason?:
       | 'TEMPORARILY_DOWN'
       | 'NOT_STANDBY_ENABLED'
-      | 'NO_MORE_SHOWS';
+      | 'NO_MORE_SHOWS'
+      | 'CLOSED';
     waitTime?: number;
     nextShowTime?: string;
   };
@@ -144,11 +145,6 @@ export interface Slot {
 
 export type HourlySlots = Slot[][];
 
-export const FALLBACK_EXPS = {
-  WDW: { id: '80010110', park: { id: '80007944' } },
-  DLR: { id: '353295', park: { id: '330339' } },
-} as const;
-
 export class ModifyNotAllowed extends Error {
   name = 'ModifyNotAllowed';
 }
@@ -208,6 +204,7 @@ export abstract class LLClient extends ApiClient {
       data.eligibility?.geniePlusEligibility?.[parkDate()]
         ?.flexEligibilityWindows || []
     ).sort((a, b) => a.time.time.localeCompare(b.time.time))[0]?.time.time;
+
     return data.availableExperiences.flatMap(exp => {
       try {
         return [
@@ -317,12 +314,6 @@ export abstract class LLClient extends ApiClient {
       );
     });
     return { eligible, ineligible };
-  }
-
-  protected fallbackExperience(experience?: { id: string }) {
-    return experience
-      ? this.resort.experience(experience.id)
-      : FALLBACK_EXPS[this.resort.id];
   }
 }
 

@@ -573,11 +573,15 @@ describe('LLClientWDW', () => {
 });
 
 describe('LLClientDLR', () => {
-  const client = new LLClientDLR(wdw, tracker);
-  client.onUnauthorized = onUnauthorized;
   const guestsRes = response({
     guests: guests.map(apiGuest),
     ineligibleGuests: ineligibleGuests.map(apiGuest),
+  });
+  let client: LLClientDLR;
+
+  beforeEach(() => {
+    client = new LLClientDLR(wdw, tracker);
+    client.onUnauthorized = onUnauthorized;
   });
 
   describe('setPartyIds()', () => {
