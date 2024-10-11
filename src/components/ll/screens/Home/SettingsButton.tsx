@@ -2,10 +2,10 @@ import { useRef, useState } from 'react';
 
 import { authStore } from '@/api/auth';
 import Overlay from '@/components/Overlay';
-import News from '@/components/screens/News';
+// import News from '@/components/screens/News';
 import { useNav } from '@/contexts/Nav';
 import ExitIcon from '@/icons/ExitIcon';
-import NewsIcon from '@/icons/NewsIcon';
+// import NewsIcon from '@/icons/NewsIcon';
 import SettingsIcon from '@/icons/SettingsIcon';
 import UserIcon from '@/icons/UserIcon';
 
@@ -24,11 +24,11 @@ export default function SettingsButton() {
       icon: <ExitIcon />,
       action: () => authStore.deleteData(),
     },
-    {
-      text: 'BG1 News',
-      icon: <NewsIcon />,
-      action: () => goTo(<News />),
-    },
+    // {
+    //   text: 'BG1 News',
+    //   icon: <NewsIcon />,
+    //   action: () => goTo(<News />),
+    // },
   ]);
   const [showingMenu, showMenu] = useState(false);
   const listRef = useRef<HTMLUListElement>(null);
