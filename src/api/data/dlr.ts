@@ -141,7 +141,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Alice in Wonderland',
     land: fantasyland,
     priority: 3,
-    avgWait: 30,
+    avgWait: 31,
   },
   353291: {
     name: 'Astro Orbitor',
@@ -151,7 +151,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Autopia',
     land: tomorrowland,
     geo: [33.8126634, -117.9167994],
-    priority: 3,
+    avgWait: 21,
   },
   424945: {
     name: 'Believe… in Holiday Magic Fireworks',
@@ -161,13 +161,14 @@ export const experiences: ResortData['experiences'] = {
     name: 'Big Thunder Mountain Railroad',
     land: frontierland,
     geo: [33.8124801, -117.9205132],
-    priority: 3.1,
-    avgWait: 40,
+    priority: 3.0,
+    avgWait: 36,
   },
   353301: {
     name: 'Buzz Lightyear Astro Blasters',
     land: tomorrowland,
     geo: [33.8122751, -117.9181819],
+    avgWait: 26,
   },
   353305: {
     name: 'Casey Jr. Circus Train',
@@ -208,7 +209,7 @@ export const experiences: ResortData['experiences'] = {
   353327: {
     name: 'Finding Nemo Submarine Voyage',
     land: tomorrowland,
-    avgWait: 35,
+    avgWait: 28,
   },
   19348571: {
     name: 'Halloween Screams (Fireworks)',
@@ -234,7 +235,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Indiana Jones Adventure',
     land: adventureland,
     geo: [33.8114097, -117.9204077],
-    priority: 1.1,
+    priority: 1.0,
     avgWait: 50,
   },
   367492: {
@@ -254,6 +255,7 @@ export const experiences: ResortData['experiences'] = {
   353363: {
     name: 'Jungle Cruise',
     land: adventureland,
+    avgWait: 31,
   },
   353365: {
     name: 'King Arthur Carrousel',
@@ -275,8 +277,8 @@ export const experiences: ResortData['experiences'] = {
     name: 'Matterhorn Bobsleds',
     land: fantasyland,
     geo: [33.8127838, -117.9182386],
-    priority: 2.0,
-    avgWait: 50,
+    priority: 3.0,
+    avgWait: 46,
   },
   18738682: {
     name: 'Disney Princesses (Royal Hall)',
@@ -298,14 +300,13 @@ export const experiences: ResortData['experiences'] = {
     land: toontown,
     geo: [33.8154852, -117.9183938],
     priority: 2.1,
-    avgWait: 40,
+    avgWait: 34,
   },
   19193459: {
     name: 'Millennium Falcon: Smugglers Run',
     land: starWars,
     geo: [33.8153228, -117.922197],
-    priority: 3.3,
-    avgWait: 40,
+    avgWait: 30,
   },
   353389: {
     name: "Mr. Toad's Wild Ride",
@@ -315,7 +316,7 @@ export const experiences: ResortData['experiences'] = {
     name: "Peter Pan's Flight",
     land: fantasyland,
     priority: 3,
-    avgWait: 35,
+    avgWait: 36,
   },
   353401: {
     name: "Pinocchio's Daring Journey",
@@ -330,7 +331,7 @@ export const experiences: ResortData['experiences'] = {
     land: newOrleans,
     geo: [33.811295, -117.9209785],
     priority: 3,
-    avgWait: 30,
+    avgWait: 31,
   },
   411973631: {
     name: 'Queenie & the Jambalaya Jazz Band',
@@ -340,15 +341,14 @@ export const experiences: ResortData['experiences'] = {
     name: 'Rise of the Resistance',
     land: starWars,
     geo: [33.8135671, -117.9236346],
-    priority: 1.0,
-    avgWait: 60,
+    avgWait: 62,
   },
   353421: {
     name: "Roger Rabbit's Car Toon Spin",
     land: toontown,
     geo: [33.8155682, -117.9181205],
-    priority: 3.2,
-    avgWait: 50,
+    priority: 3.1,
+    avgWait: 46,
   },
   353429: {
     name: "Snow White's Enchanted Wish",
@@ -358,7 +358,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Space Mountain',
     land: tomorrowland,
     geo: [33.8112647, -117.9175892],
-    priority: 2.2,
+    priority: 2.0,
     avgWait: 50,
   },
   18237368: {
@@ -371,7 +371,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Star Tours',
     land: tomorrowland,
     geo: [33.8119436, -117.9182118],
-    avgWait: 35,
+    avgWait: 24,
   },
   353443: {
     name: 'Storybook Land Canal Boats',
@@ -438,22 +438,21 @@ export const experiences: ResortData['experiences'] = {
     name: "Goofy's Sky School",
     land: paradise,
     geo: [33.8062523, -117.9228425],
-    priority: 3.2,
+    priority: 3.1,
     avgWait: 35,
   },
   353345: {
     name: 'Grizzly River Run',
     land: grizzly,
     geo: [33.8069638, -117.9212689],
-    priority: 4.0,
-    avgWait: 50,
+    avgWait: 26,
   },
   353451: {
     name: 'Guardians of the Galaxy - Mission: BREAKOUT',
     land: avengers,
     geo: [33.8068606, -117.9172434],
     priority: 1.1,
-    avgWait: 50,
+    avgWait: 45,
   },
   18774860: {
     name: 'Guardians of the Galaxy - Monsters After Dark',
@@ -470,8 +469,8 @@ export const experiences: ResortData['experiences'] = {
     name: 'Incredicoaster',
     land: pixar,
     geo: [33.8046948, -117.9207725],
-    priority: 3.0,
-    avgWait: 35,
+    priority: 3.3,
+    avgWait: 33,
   },
   19285637: {
     name: 'Inside Out Emotional Whirlwind',
@@ -536,8 +535,8 @@ export const experiences: ResortData['experiences'] = {
     name: 'Monsters, Inc.',
     land: hollywood,
     geo: [33.8081471, -117.9175137],
-    priority: 3.1,
-    avgWait: 40,
+    priority: 3.2,
+    avgWait: 38,
   },
   353379: {
     name: 'Pixar Pal-A-Round - Swinging',
@@ -547,8 +546,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Radiator Springs Racers',
     land: cars,
     geo: [33.8052475, -117.9198715],
-    priority: 1.0,
-    avgWait: 70,
+    avgWait: 71,
   },
   353413: {
     name: 'Redwood Creek Challenge Trail',
@@ -562,8 +560,8 @@ export const experiences: ResortData['experiences'] = {
     name: "Soarin' Around the World",
     land: grizzly,
     geo: [33.8085516, -117.9204917],
-    priority: 2.2,
-    avgWait: 45,
+    priority: 3.0,
+    avgWait: 38,
   },
   19324604: {
     name: "Soarin' Over California",
@@ -575,7 +573,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Toy Story Midway Mania',
     land: pixar,
     geo: [33.804614, -117.9216383],
-    priority: 2.0,
+    priority: 1.0,
     avgWait: 45,
   },
   353457: {
@@ -587,7 +585,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'WEB SLINGERS',
     land: avengers,
     geo: [33.8067598, -117.91849],
-    priority: 2.1,
+    priority: 2.0,
     avgWait: 40,
   },
   411805943: {
