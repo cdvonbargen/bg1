@@ -48,8 +48,8 @@ const newOrleans = {
   theme: { bg: 'bg-indigo-600', text: 'text-indigo-700' },
   park: dl,
 };
-const critter = {
-  name: 'Critter Country',
+const bayou = {
+  name: 'Bayou Country',
   sort: 4,
   theme: { bg: 'bg-orange-600', text: 'text-orange-700' },
   park: dl,
@@ -235,7 +235,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Indiana Jones Adventure',
     land: adventureland,
     geo: [33.8114097, -117.9204077],
-    priority: 1.0,
+    priority: 1.1,
     avgWait: 50,
   },
   367492: {
@@ -271,7 +271,7 @@ export const experiences: ResortData['experiences'] = {
   },
   353449: {
     name: 'Many Adventures of Winnie the Pooh',
-    land: critter,
+    land: bayou,
   },
   353377: {
     name: 'Matterhorn Bobsleds',
@@ -384,6 +384,12 @@ export const experiences: ResortData['experiences'] = {
   19319963: {
     name: 'Tale of the Lion King',
     land: fantasyland,
+  },
+  412062678: {
+    name: "Tiana's Bayou Adventure",
+    land: bayou,
+    priority: 1.0,
+    avgWait: 60,
   },
   412109781: {
     name: 'Together Forever - Pixar Nighttime Spectacular (Fireworks)',
