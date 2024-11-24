@@ -21,7 +21,8 @@ export default function Button<P>(
   if (!cls.includes(' bg-')) cls += ` ${bg} text-white`;
   return (
     <button
-      onClick={async () => {
+      onClick={async event => {
+        event.stopPropagation();
         if (onClick) await onClick();
         if (back) {
           if (back === true) {
