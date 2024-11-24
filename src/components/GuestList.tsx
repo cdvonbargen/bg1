@@ -34,7 +34,7 @@ export default function GuestList<T extends Guest>({
 
   return (
     <>
-      <ul className="mt-2">
+      <ul className="mt-4">
         {guests.map(g => {
           const checked = selected.has(g);
           const disabled = limitReached && !checked;
