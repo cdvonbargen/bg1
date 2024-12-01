@@ -16,13 +16,20 @@ export const NavProvider = NavContext.Provider;
 export const useNav = () => useContext(NavContext);
 
 export interface Screens {
-  current: JSX.Element;
-  prev?: JSX.Element;
+  activeScreen: JSX.Element;
+  prevScreen?: JSX.Element;
 }
 
-export const ScreensContext = createContext<Screens>({ current: <div /> });
+export const ScreensContext = createContext<Screens>({ activeScreen: <div /> });
 export const ScreensProvider = ScreensContext.Provider;
 export const useScreens = () => useContext(ScreensContext);
+
+export const useScreenState = () => {
+  const { activeScreen, prevScreen } = useScreens();
+  const [thisScreen] = useState(activeScreen);
+  const [isFirstScreen] = useState(!prevScreen);
+  return { isActiveScreen: activeScreen === thisScreen, isFirstScreen };
+};
 
 let keyInc = 0;
 const nextKey = () => ++keyInc;
@@ -32,7 +39,7 @@ const getHashPos = () => Number(location.hash.slice(1)) || 0;
 let hashChanged = () => undefined as void;
 
 export function Nav({ children }: { children: JSX.Element }) {
-  const [screens, setScreens] = useState<Screens>({ current: children });
+  const [screens, setScreens] = useState<Screens>({ activeScreen: children });
   const stack = useRef<{ elem: JSX.Element; key: number }[]>([
     { elem: children, key: 0 },
   ]);
@@ -42,7 +49,7 @@ export function Nav({ children }: { children: JSX.Element }) {
       let key: number;
       if (options?.replace) {
         key = stack.current[pos].key ?? nextKey();
-        setScreens(screens => ({ ...screens, current: elem }));
+        setScreens(screens => ({ ...screens, activeScreen: elem }));
       } else {
         stack.current = stack.current.slice(0, ++pos);
         location.hash = `#${pos}`;
@@ -86,8 +93,8 @@ export function Nav({ children }: { children: JSX.Element }) {
         history.back();
       } else {
         setScreens({
-          current: stack.current[pos]?.elem ?? <div />,
-          prev: stack.current[pos - 1]?.elem,
+          activeScreen: stack.current[pos]?.elem ?? <div />,
+          prevScreen: stack.current[pos - 1]?.elem,
         });
       }
     }

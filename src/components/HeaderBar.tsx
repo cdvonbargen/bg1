@@ -1,6 +1,6 @@
 import { Children, Fragment, cloneElement, isValidElement } from 'react';
 
-import { useScreens } from '@/contexts/Nav';
+import { useScreenState } from '@/contexts/Nav';
 import { useTheme } from '@/contexts/Theme';
 import BackIcon from '@/icons/BackIcon';
 
@@ -15,7 +15,7 @@ export default function HeaderBar({
   subhead?: React.ReactNode;
   children?: React.ReactNode;
 }) {
-  const { prev } = useScreens();
+  const { isFirstScreen } = useScreenState();
   const { bg, text } = useTheme();
 
   function changeButtonColors(node: React.ReactNode): React.ReactNode {
@@ -31,7 +31,7 @@ export default function HeaderBar({
   return (
     <div className={`px-3 ext-lg text-white ${bg}`}>
       <div className="flex flex-wrap justify-end gap-x-2 gap-y-1 min-h-[36px] py-2">
-        {!!prev && (
+        {!isFirstScreen && (
           <Button back className="-my-2 -ml-3" title="Go Back">
             <BackIcon />
           </Button>

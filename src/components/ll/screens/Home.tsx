@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { withTabs } from '@/components/Tab';
 import { useExperiences } from '@/contexts/Experiences';
-import { useScreens } from '@/contexts/Nav';
+import { useScreenState } from '@/contexts/Nav';
 import { usePark } from '@/contexts/Park';
 import { usePlans } from '@/contexts/Plans';
 import { useRebooking } from '@/contexts/Rebooking';
@@ -48,7 +48,7 @@ const tabs = [
 const footer = <SettingsButton />;
 
 const Home = withTabs({ tabs, footer }, ({ tab }) => {
-  const { current } = useScreens();
+  const { isActiveScreen } = useScreenState();
   const rebooking = useRebooking();
   const { park } = usePark();
   const { refreshExperiences } = useExperiences();
@@ -61,11 +61,11 @@ const Home = withTabs({ tabs, footer }, ({ tab }) => {
 
   useEffect(() => {
     return onVisible(() => {
-      if (current.type !== Home) return;
+      if (!isActiveScreen) return;
       refreshExperiences(AUTO_REFRESH_MIN_MS);
       refreshPlans(AUTO_REFRESH_MIN_MS);
     });
-  }, [current, refreshExperiences, refreshPlans]);
+  }, [isActiveScreen, refreshExperiences, refreshPlans]);
 
   useEffect(() => {
     if (rebooking.current) contentRef.current?.scroll(0, 0);
