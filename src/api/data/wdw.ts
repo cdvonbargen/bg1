@@ -526,9 +526,19 @@ export const experiences: ResortData['experiences'] = {
     name: 'Canada Far and Wide',
     land: showcase,
   },
+  245275: {
+    name: 'Canadian Holiday Voyageurs',
+    land: showcase,
+    type: 'HOLIDAY',
+  },
   19036653: {
     name: 'Canada Mill Stage Entertainment',
     land: showcase,
+  },
+  70684: {
+    name: 'Candlelight Processional',
+    land: showcase,
+    type: 'HOLIDAY',
   },
   245272: {
     name: 'Chinese Lion Dancer',
