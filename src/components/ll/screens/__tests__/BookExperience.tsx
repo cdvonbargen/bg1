@@ -20,7 +20,15 @@ import { PlansContext } from '@/contexts/Plans';
 import { RebookingContext, RebookingProvider } from '@/contexts/Rebooking';
 import { parkDate } from '@/datetime';
 import { ping } from '@/ping';
-import { TODAY, click, loading, screen, see, setTime } from '@/testing';
+import {
+  TODAY,
+  YESTERDAY,
+  click,
+  loading,
+  screen,
+  see,
+  setTime,
+} from '@/testing';
 
 import BookingListing from '../../BookingListing';
 import RebookingHeader from '../../RebookingHeader';
@@ -289,6 +297,11 @@ describe('BookExperience', () => {
   });
 
   it('can modify same experience even if rebooking not started', async () => {
+    const otherDayBooking = {
+      ...booking,
+      start: { date: YESTERDAY, time: '09:00:00' },
+      end: { date: YESTERDAY, time: '10:00:00' },
+    };
     ll.guests.mockResolvedValueOnce({
       eligible: [],
       ineligible: [
@@ -301,7 +314,12 @@ describe('BookExperience', () => {
     });
     renderResort(
       <PlansContext.Provider
-        value={{ plans: [booking], refreshPlans: () => {}, loaderElem: null }}
+        value={{
+          plans: [otherDayBooking, booking],
+          plansLoaded: true,
+          refreshPlans: () => {},
+          loaderElem: null,
+        }}
       >
         <BookingDateProvider>
           <RebookingProvider>

@@ -11,6 +11,7 @@ import { Party, PartyProvider } from '@/contexts/Party';
 import { usePlans } from '@/contexts/Plans';
 import { useRebooking } from '@/contexts/Rebooking';
 import { useResort } from '@/contexts/Resort';
+import { parkDate } from '@/datetime';
 import useDataLoader from '@/hooks/useDataLoader';
 import { ping } from '@/ping';
 
@@ -80,7 +81,10 @@ export default function BookExperience({
       ) {
         const booking = plans.find(
           (b): b is LightningLane =>
-            b.id === experience.id && !!b.modifiable && isType(b, 'LL', 'MP')
+            b.id === experience.id &&
+            !!b.modifiable &&
+            isType(b, 'LL', 'MP') &&
+            parkDate(b.start) === bookingDate
         );
         if (booking) return rebooking.begin(booking, true);
       }
