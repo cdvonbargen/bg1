@@ -619,7 +619,7 @@ export const experiences: ResortData['experiences'] = {
   },
   3427049: {
     name: 'JOYFUL! A Celebration of the Season',
-    land: showcase,
+    land: celebration,
     type: 'HOLIDAY',
   },
   19516307: {
@@ -632,7 +632,7 @@ export const experiences: ResortData['experiences'] = {
     type: 'HOLIDAY',
   },
   245264: {
-    name: 'Las Posadas Celebration',
+    name: 'Las Posadas Celebration (Mexico)',
     land: showcase,
     type: 'HOLIDAY',
   },
@@ -650,6 +650,8 @@ export const experiences: ResortData['experiences'] = {
     name: 'Living with the Land', // Christmas overlay
     land: nature,
     geo: [28.3739368, -81.5526389],
+    priority: 4.1,
+    avgWait: 23,
   },
   412008998: {
     land: showcase,
@@ -745,6 +747,11 @@ export const experiences: ResortData['experiences'] = {
     name: 'Sergio (Italy)',
     land: showcase,
   },
+  411840597: {
+    name: 'Si-Zhu Trio (China)',
+    land: showcase,
+    type: 'HOLIDAY',
+  },
   20194: {
     name: "Soarin' Around the World",
     land: nature,
@@ -786,6 +793,11 @@ export const experiences: ResortData['experiences'] = {
   80010879: {
     name: 'Voices of Liberty',
     land: showcase,
+  },
+  178205: {
+    name: 'Voice of Liberty',
+    land: showcase,
+    type: 'HOLIDAY',
   },
   // Hollywood Studios
   18904172: {
@@ -1041,6 +1053,11 @@ export const experiences: ResortData['experiences'] = {
   72877: {
     name: 'Tam Tam Drummers of Harambe',
     land: africa,
+  },
+  18447293: {
+    name: 'Tree of Life Awakenings',
+    land: discIsland,
+    type: 'HOLIDAY',
   },
   80010228: {
     name: 'Triceratop Spin',
