@@ -46,17 +46,15 @@ export function BookingDateProvider({
       : parkDate();
   });
 
+  useEffect(() => {
+    kvdb.setDaily<string>(BOOKING_DATE_KEY, bookingDate);
+  }, [bookingDate]);
+
   const setBookingDate = useCallback(
     (date: Parameters<typeof setDate>[0]) => {
       setDate(prevDate => {
         date = typeof date === 'function' ? date(prevDate) : date;
-        if (prebook) {
-          date = validDate(date);
-          kvdb.setDaily<string>(BOOKING_DATE_KEY, date);
-          return date;
-        } else {
-          return parkDate();
-        }
+        return prebook ? validDate(date) : parkDate();
       });
     },
     [prebook, setDate]

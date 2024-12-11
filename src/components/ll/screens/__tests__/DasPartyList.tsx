@@ -3,17 +3,21 @@ import {
   itinerary,
   mickey,
   minnie,
+  mk,
   party,
   renderResort,
 } from '@/__fixtures__/das';
 import { DasBooking, DasParty } from '@/api/das';
-import { Nav } from '@/contexts/Nav';
+import { useNav } from '@/contexts/Nav';
+import { ParkContext } from '@/contexts/Park';
 import { PlansProvider } from '@/contexts/Plans';
 import { click, loading, see, setTime } from '@/testing';
 
+import BookingDetails from '../BookingDetails';
 import DasPartyList from '../DasPartyList';
+import DasSelection from '../DasSelection';
 
-setTime('10:00');
+jest.mock('@/contexts/Nav');
 
 const donald = {
   id: 'donald',
@@ -25,36 +29,43 @@ const daisy = {
   name: 'Daisy Duck',
 };
 
-const parties: DasParty[] = [
-  party,
-  { primaryGuest: daisy, linkedGuests: [donald], selectionLimit: 4 },
-];
+const duckParty = {
+  primaryGuest: daisy,
+  linkedGuests: [donald],
+  selectionLimit: 4,
+};
+const parties: DasParty[] = [party, duckParty];
 
 function DasPartyListTest({ parties }: { parties: DasParty[] }) {
   return (
-    <PlansProvider>
-      <Nav>
+    <ParkContext.Provider value={{ park: mk, setPark: jest.fn() }}>
+      <PlansProvider>
         <DasPartyList parties={parties} />
-      </Nav>
-    </PlansProvider>
+      </PlansProvider>
+    </ParkContext.Provider>
   );
 }
 
 async function renderComponent(parties: DasParty[], plans: DasBooking[]) {
-  jest
-    .spyOn(itinerary, 'plans')
-    .mockResolvedValueOnce([])
-    .mockResolvedValueOnce(plans);
+  jest.spyOn(itinerary, 'plans').mockResolvedValue(plans);
   renderResort(<DasPartyListTest parties={parties} />);
   await loading();
 }
 
 describe('DasPartyList', () => {
+  const { goTo } = useNav();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    setTime('10:00');
+  });
+
   it('shows DAS selection details if active selection', async () => {
     await renderComponent([party], [booking]);
     see('Your DAS Selection');
     see(mickey.name);
     see(minnie.name);
+    expect(itinerary.plans).toHaveBeenCalledTimes(1);
   });
 
   it('shows DAS booking screen if no active selection', async () => {
@@ -68,16 +79,13 @@ describe('DasPartyList', () => {
     await renderComponent(parties, [booking]);
     see(mickey.name);
     see(daisy.name);
-    click('Select');
-    await see.screen('DAS Selection');
-    see(donald.name);
-    see(daisy.name);
 
-    click('Go Back');
-    await see.screen('DAS Parties');
+    click('Select');
+    expect(goTo).toHaveBeenCalledWith(
+      <DasSelection park={mk} party={duckParty} />
+    );
+
     click('Details');
-    await see.screen('Your DAS Selection');
-    see(mickey.name);
-    see(minnie.name);
+    expect(goTo).toHaveBeenCalledWith(<BookingDetails booking={booking} />);
   });
 });

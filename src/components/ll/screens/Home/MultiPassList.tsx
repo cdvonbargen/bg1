@@ -125,6 +125,10 @@ const Experiences = memo(function Experiences({
     : park.dropTimes[0];
   const nowMinutes = timeToMinutes(new DateTime().time);
 
+  useEffect(() => {
+    kvdb.set<string[]>(STARRED_KEY, [...starred]);
+  }, [starred]);
+
   function toggleStar({ id }: { id: string }) {
     setStarred(starred => {
       starred = new Set(starred);
@@ -133,7 +137,6 @@ const Experiences = memo(function Experiences({
       } else {
         starred.add(id);
       }
-      kvdb.set<string[]>(STARRED_KEY, [...starred]);
       return starred;
     });
   }

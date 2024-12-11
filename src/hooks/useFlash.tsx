@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 type FlashType = 'alert' | 'error';
 
@@ -6,21 +6,20 @@ const DEFAULT_DURATION_MS = 3000;
 const COLORS = { alert: 'bg-yellow-200', error: 'bg-red-200' };
 
 export default function useFlash(): [React.ReactNode, typeof flash] {
-  const [, setTimeoutId] = useState(0);
   const [message, setMessage] = useState('');
   const [type, setType] = useState<FlashType>('alert');
+
+  useEffect(() => {
+    if (message === '') return;
+    const timeoutId = self.setTimeout(() => {
+      setMessage('');
+    }, DEFAULT_DURATION_MS);
+    return () => clearTimeout(timeoutId);
+  }, [message]);
 
   const flash = useCallback((message: string, type?: FlashType) => {
     setMessage(message);
     setType(type || 'alert');
-    setTimeoutId(timeoutId => {
-      clearTimeout(timeoutId);
-      return message
-        ? self.setTimeout(() => {
-            setMessage('');
-          }, DEFAULT_DURATION_MS)
-        : timeoutId;
-    });
   }, []);
   const flashElem = message ? <Flash message={message} type={type} /> : null;
   return [flashElem, flash];

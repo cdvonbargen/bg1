@@ -107,19 +107,17 @@ export default function BookExperience({
       setParty({
         ...guests,
         selected: guests.eligible.slice(0, ll.rules.maxPartySize),
-        setSelected: (selected: Guest[]) =>
-          setParty(party => {
-            if (!party) return party;
-            const oldSelected = new Set(party.selected);
-            setOffer(offer =>
-              offer === null || selected.some(g => !oldSelected.has(g))
-                ? undefined
-                : offer
-            );
-            return { ...party, selected };
-          }),
+        setSelected(guests: Guest[]) {
+          const oldSelected = new Set(this.selected);
+          setOffer(offer =>
+            offer === null || guests.some(g => !oldSelected.has(g))
+              ? undefined
+              : offer
+          );
+          setParty({ ...this, selected: guests });
+        },
         experience,
-      });
+      } as Party);
     });
   }, [plans, ll, experience, bookingDate, rebooking, loadData]);
 
