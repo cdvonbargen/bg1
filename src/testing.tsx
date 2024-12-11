@@ -31,14 +31,10 @@ function getQueryError(message: string) {
 const getTextError = (text: string) =>
   getQueryError(`Unable to find element with text: ${text}`);
 
-const withinActive = () =>
-  within(
-    document.querySelector<HTMLElement>('article:not([hidden])') ??
-      document.body
-  );
-
 const getContainerElem = () =>
   document.querySelector<HTMLElement>('article:not([hidden])') ?? document.body;
+
+const withinActive = () => within(getContainerElem());
 
 export const see = Object.assign(
   (text: string, role?: ByRoleMatcher, options?: ByRoleOptions) => {
@@ -114,9 +110,10 @@ export function click(textOrElem: string | HTMLElement, role?: ByRoleMatcher) {
 
 export async function loading() {
   try {
-    await waitForElementToBeRemoved(() => screen.queryByLabelText('Loading…'), {
-      timeout: 5000,
-    });
+    await waitForElementToBeRemoved(
+      () => withinActive().queryByLabelText('Loading…'),
+      { timeout: 5000 }
+    );
   } catch {
     throw getQueryError("Didn't show loading spinner");
   }
