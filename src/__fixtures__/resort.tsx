@@ -11,7 +11,7 @@ for (const exp of Object.values(data.experiences)) delete exp?.dropTimes;
 data.experiences[hm]!.dropTimes = ['13:30', '15:30'];
 data.experiences[sm]!.dropTimes = ['11:30', '13:30'];
 
-export const wdw = jest.mocked(new Resort('WDW', data));
+export const wdw = new Resort('WDW', data);
 const clients = jest.mocked(createClients(wdw));
 
 export function renderResort(children: React.ReactNode) {
