@@ -1,7 +1,7 @@
 import Screen from '@/components/Screen';
 import { click as _click, render, see, waitFor } from '@/testing';
 
-import { Nav, useNav } from '../Nav';
+import { Nav, NavError, useNav } from '../Nav';
 
 function Screen1() {
   const { goTo } = useNav();
@@ -25,7 +25,17 @@ function Screen3() {
   const { goTo, goBack } = useNav();
   return (
     <Screen title="Screen 3">
-      <button onClick={() => goBack({ screen: Screen1 })}>Screen 1</button>
+      <button
+        onClick={() => {
+          try {
+            goBack({ screen: Screen4 });
+          } catch (error) {
+            if (error instanceof NavError) goBack({ screen: Screen1 });
+          }
+        }}
+      >
+        Screen 1
+      </button>
       <button onClick={() => goBack()}>Screen 2.1</button>
       <button onClick={() => goTo(<Screen4 />, { replace: true })}>
         Screen 4

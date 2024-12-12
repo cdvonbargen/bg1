@@ -17,7 +17,7 @@ export default function RebookingHeader() {
             button={
               <Button
                 type="small"
-                back={{ screen: Home }}
+                back={rebooking.auto && { screen: Home }}
                 onClick={rebooking.end}
               >
                 Keep

@@ -38,6 +38,10 @@ const getHashPos = () => Number(location.hash.slice(1)) || 0;
 
 let hashChanged = () => undefined as void;
 
+export class NavError extends Error {
+  readonly name = 'NavError';
+}
+
 export function Nav({ children }: { children: JSX.Element }) {
   const [screens, setScreens] = useState<Screens>({ activeScreen: children });
   const stack = useRef<{ elem: JSX.Element; key: number }[]>([
@@ -61,27 +65,28 @@ export function Nav({ children }: { children: JSX.Element }) {
       screen: Screen,
       props,
     }: { screen?: C; props?: Partial<P> } = {}) {
-      if (Screen) {
-        const pos = getHashPos();
-        for (let i = pos - 1; i >= 0; --i) {
-          if (stack.current[i].elem.type === Screen) {
-            history.go(i - pos);
-            if (props) {
-              const newProps = { ...stack.current[i].elem.props, ...props };
-              stack.current[i].elem = <Screen {...newProps} />;
-            }
-            break;
-          }
-        }
-      } else {
-        history.back();
-      }
-      return new Promise<void>(resolve => {
+      const promise = new Promise<void>(resolve => {
         hashChanged = () => {
           resolve();
           hashChanged = () => undefined;
         };
       });
+      if (!Screen) {
+        history.back();
+        return promise;
+      }
+      const pos = getHashPos();
+      for (let i = pos - 1; i >= 0; --i) {
+        if (stack.current[i].elem.type === Screen) {
+          history.go(i - pos);
+          if (props) {
+            const newProps = { ...stack.current[i].elem.props, ...props };
+            stack.current[i].elem = <Screen {...newProps} />;
+          }
+          return promise;
+        }
+      }
+      throw new NavError(`No previous ${Screen.name} screen`);
     },
   });
 

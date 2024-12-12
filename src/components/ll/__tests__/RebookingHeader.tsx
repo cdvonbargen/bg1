@@ -16,9 +16,9 @@ const rebooking = {
   current: booking as typeof booking | undefined,
 };
 
-function Test() {
+function Test({ auto }: { auto?: boolean }) {
   return (
-    <RebookingContext.Provider value={rebooking}>
+    <RebookingContext.Provider value={{ ...rebooking, auto: !!auto }}>
       <RebookingHeader />
     </RebookingContext.Provider>
   );
@@ -38,13 +38,19 @@ describe('RebookingHeader', () => {
     see.time(booking.end.time as string);
     click('Keep');
     expect(rebooking.end).toHaveBeenCalledTimes(1);
-    await waitFor(() => expect(goBack).toHaveBeenCalledTimes(1));
-    expect(goBack).toHaveBeenLastCalledWith({ screen: Home });
+    expect(goBack).not.toHaveBeenCalled();
   });
 
-  it('shows nothing if not modifying', () => {
+  it('shows nothing if not modifying', async () => {
     rebooking.current = undefined;
     const { container } = render(<Test />);
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it('goes back to Home screen if auto rebooking', async () => {
+    render(<Test auto />);
+    click('Keep');
+    await waitFor(() => expect(goBack).toHaveBeenCalledTimes(1));
+    expect(goBack).toHaveBeenLastCalledWith({ screen: Home });
   });
 });

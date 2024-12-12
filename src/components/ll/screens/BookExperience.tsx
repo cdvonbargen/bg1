@@ -40,6 +40,14 @@ export default function BookExperience({
   const [offer, setOffer] = useState<Offer | null | undefined>();
   const { loadData, loaderElem } = useDataLoader();
 
+  useEffect(() => {
+    setParty(undefined);
+    setOffer(undefined);
+    return () => {
+      if (rebooking.auto) rebooking.end();
+    };
+  }, [rebooking]);
+
   async function book() {
     if (!offer || !party) return;
     loadData(
@@ -111,12 +119,6 @@ export default function BookExperience({
   useEffect(() => {
     if (!party) loadParty();
   }, [party, loadParty]);
-
-  useEffect(() => {
-    return () => {
-      if (rebooking.auto) rebooking.end();
-    };
-  }, [rebooking]);
 
   const refreshOffer = useCallback(
     (first = false) => {

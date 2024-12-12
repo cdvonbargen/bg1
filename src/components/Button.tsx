@@ -1,4 +1,4 @@
-import { useNav } from '@/contexts/Nav';
+import { NavError, useNav } from '@/contexts/Nav';
 import { useTheme } from '@/contexts/Theme';
 
 const TYPES = {
@@ -25,10 +25,14 @@ export default function Button<P>(
         event.stopPropagation();
         if (onClick) await onClick();
         if (back) {
-          if (back === true) {
-            goBack();
-          } else {
-            goBack(back);
+          try {
+            if (back === true) {
+              await goBack();
+            } else {
+              await goBack(back);
+            }
+          } catch (error) {
+            if (!(error instanceof NavError)) throw error;
           }
         }
       }}
