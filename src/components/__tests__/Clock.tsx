@@ -23,7 +23,7 @@ describe('Clock', () => {
   });
 
   it('calls onSync(false) when syncing fails', async () => {
-    jest.mocked(syncTime).mockRejectedValue(SyncFailed);
+    jest.mocked(syncTime).mockRejectedValue(new SyncFailed());
     render(<Clock onSync={onSync} />);
     await waitFor(() => expect(onSync).toHaveBeenCalledWith(false));
   });

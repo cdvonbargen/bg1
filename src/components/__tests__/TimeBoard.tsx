@@ -29,7 +29,7 @@ describe('TimeBoard', () => {
   });
 
   it('shows unsynced if syncing fails', async () => {
-    jest.mocked(syncTime).mockRejectedValue(SyncFailed);
+    jest.mocked(syncTime).mockRejectedValue(new SyncFailed());
     renderComponent();
     await waitFor(() => see(UNSYNCED_MSG));
   });
