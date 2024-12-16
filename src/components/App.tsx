@@ -39,9 +39,6 @@ export default function App() {
 
   useEffect(() => {
     disableDoubleTapZoom();
-  }, []);
-
-  useEffect(() => {
     authStore.onUnauthorized = () => requireLogin(true);
     (async () => {
       for (const [Client, Component] of [
