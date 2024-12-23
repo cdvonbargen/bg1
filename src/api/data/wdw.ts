@@ -385,6 +385,10 @@ export const experiences: ResortData['experiences'] = {
     name: "Mickey's Magical Friendship Faire",
     land: mainStreet,
   },
+  411854077: {
+    name: "Mickey's Most Merriest Celebration",
+    land: mainStreet,
+  },
   411854078: {
     name: "Mickey's Once Upon a Christmastime Parade",
     land: mainStreet,
