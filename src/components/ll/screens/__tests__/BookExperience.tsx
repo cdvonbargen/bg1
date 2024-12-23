@@ -360,4 +360,13 @@ describe('BookExperience', () => {
     await see.screen('Start');
     see.no('Modifying Reservation');
   });
+
+  it("doesn't auto-rebook if multiple LLs for same experience", async () => {
+    mockExperienceLimitReached();
+    const booking1 = createBooking(hm, { guests: [mickey, minnie] });
+    const booking2 = createBooking(hm, { guests: [pluto] });
+    itinerary.plans.mockResolvedValue([booking1, booking2]);
+    await renderComponent();
+    see.no('Modifying Reservation');
+  });
 });

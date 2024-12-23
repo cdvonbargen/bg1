@@ -94,14 +94,16 @@ export default function BookExperience({
           g => g.ineligibleReason === 'EXPERIENCE_LIMIT_REACHED'
         )
       ) {
-        const booking = plans.find(
+        const sameExpLLs = plans.filter(
           (b): b is LightningLane =>
             b.id === experience.id &&
             !!b.modifiable &&
             isType(b, 'LL', 'MP') &&
             parkDate(b.start) === bookingDate
         );
-        if (booking) return rebooking.begin(booking, true);
+        if (sameExpLLs.length === 1) {
+          return rebooking.begin(sameExpLLs[0], true);
+        }
       }
 
       setParty({
