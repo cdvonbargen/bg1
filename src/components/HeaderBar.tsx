@@ -1,4 +1,4 @@
-import { Children, Fragment, cloneElement, isValidElement } from 'react';
+import { Children, Fragment, isValidElement } from 'react';
 
 import { useScreenState } from '@/contexts/Nav';
 import { useTheme } from '@/contexts/Theme';
@@ -20,12 +20,15 @@ export default function HeaderBar({
 
   function changeButtonColors(node: React.ReactNode): React.ReactNode {
     if (!isValidElement(node) || typeof node.type === 'string') return node;
-    if (node.type === Fragment) {
-      return Children.map(node.props.children, changeButtonColors);
-    }
-    return cloneElement(node as ReturnType<typeof Button>, {
-      className: `min-h-[36px] bg-white bg-opacity-90 ${text} ${node.props.className || ''}`,
-    });
+    const n = node as React.JSX.Element;
+    return n.type === Fragment ? (
+      Children.map(n.props.children, changeButtonColors)
+    ) : (
+      <n.type
+        {...n.props}
+        className={`min-h-[36px] bg-white bg-opacity-90 ${text} ${n.props.className || ''}`}
+      />
+    );
   }
 
   return (

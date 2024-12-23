@@ -13,7 +13,7 @@ import Screen, { ScreenProps } from './Screen';
 
 export interface TabDef {
   name: string;
-  icon: JSX.Element;
+  icon: React.JSX.Element;
   component: React.FC<any>;
 }
 

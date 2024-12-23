@@ -98,7 +98,7 @@ async function goBack(screenTitle: string) {
 async function renderComponent({
   screen,
   rebook,
-}: { screen?: JSX.Element; rebook?: LightningLane } = {}) {
+}: { screen?: React.JSX.Element; rebook?: LightningLane } = {}) {
   renderResort(
     <PlansProvider>
       <BookingDateProvider>

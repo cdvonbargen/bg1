@@ -107,7 +107,6 @@ export class ExperienceUnavailable extends Error {
 
 export class DasClient extends ApiClient {
   protected bookingGuestId: string | undefined;
-  #parties: DasParty[] | undefined;
 
   async experiences(park: Park): Promise<Experience[]> {
     const parkId = encodeURIComponent(park.id);

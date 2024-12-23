@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 export interface NavMethods {
-  goTo: (elem: JSX.Element, options?: { replace?: boolean }) => void;
+  goTo: (elem: React.JSX.Element, options?: { replace?: boolean }) => void;
   goBack: <P>(options?: {
     screen?: React.FC<P>;
     props?: Partial<P>;
@@ -16,8 +16,8 @@ export const NavProvider = NavContext.Provider;
 export const useNav = () => useContext(NavContext);
 
 export interface Screens {
-  activeScreen: JSX.Element;
-  prevScreen?: JSX.Element;
+  activeScreen: React.JSX.Element;
+  prevScreen?: React.JSX.Element;
 }
 
 export const ScreensContext = createContext<Screens>({ activeScreen: <div /> });
@@ -42,13 +42,13 @@ export class NavError extends Error {
   readonly name = 'NavError';
 }
 
-export function Nav({ children }: { children: JSX.Element }) {
+export function Nav({ children }: { children: React.JSX.Element }) {
   const [screens, setScreens] = useState<Screens>({ activeScreen: children });
-  const stack = useRef<{ elem: JSX.Element; key: number }[]>([
+  const stack = useRef<{ elem: React.JSX.Element; key: number }[]>([
     { elem: children, key: 0 },
   ]);
   const nav = useRef({
-    goTo(elem: JSX.Element, options?: { replace?: boolean }) {
+    goTo(elem: React.JSX.Element, options?: { replace?: boolean }) {
       let pos = getHashPos();
       let key: number;
       if (options?.replace) {

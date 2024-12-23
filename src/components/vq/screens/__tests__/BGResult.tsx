@@ -35,7 +35,7 @@ describe('BGResult', () => {
       {
         guests: guests.slice(0, 2),
       },
-      {}
+      undefined
     );
     expect(GuestList).toHaveBeenNthCalledWith(
       2,
@@ -43,7 +43,7 @@ describe('BGResult', () => {
         guests: guests.slice(2),
         conflicts,
       },
-      {}
+      undefined
     );
   });
 
@@ -52,7 +52,7 @@ describe('BGResult', () => {
     see('Sorry!');
     expect(GuestList).toHaveBeenLastCalledWith(
       { guests: [], conflicts: {} },
-      {}
+      undefined
     );
   });
 });

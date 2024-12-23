@@ -26,8 +26,11 @@ describe('JoinQueue', () => {
       <JoinQueue queue={rotr} guests={guests} />
     );
     expect(TimeBoard).toHaveBeenLastCalledWith(
-      { time: rotr.nextScheduledOpenTime, label: 'Next queue opening' },
-      {}
+      {
+        time: rotr.nextScheduledOpenTime,
+        label: 'Next queue opening',
+      },
+      undefined
     );
     expect(container).toHaveTextContent(
       'Tap the Join Virtual Queue button when the clock reads 07:00:00.'
