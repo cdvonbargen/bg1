@@ -11,31 +11,28 @@ import { Time } from '@/components/Time';
 import { useClients } from '@/contexts/Clients';
 import { useDasParties } from '@/contexts/DasParties';
 import { useNav } from '@/contexts/Nav';
-import { usePark } from '@/contexts/Park';
-import { useRebooking } from '@/contexts/Rebooking';
 import { useResort } from '@/contexts/Resort';
 import { DEFAULT_THEME } from '@/contexts/Theme';
 import { parkDate } from '@/datetime';
-import useDataLoader from '@/hooks/useDataLoader';
 
 import { ExperienceList } from '../ExperienceList';
+import ModifyButton from '../ModifyButton';
 import ReturnTime from '../ReturnTime';
-import BookNewReturnTime from './BookNewReturnTime';
 import CancelGuests from './CancelGuests';
+import ChangeBookingTime from './ChangeBookingTime';
 import Home from './Home';
-import SelectReturnTime from './SelectReturnTime';
 
 export default function BookingDetails({
   booking,
   isNew,
+  unmodifiable,
 }: {
   booking: Booking;
   isNew?: boolean;
+  unmodifiable?: boolean;
 }) {
   const { goTo, goBack } = useNav();
-  const { loadData, loaderElem } = useDataLoader();
   const { parks } = useResort();
-  const { setPark } = usePark();
   const { ll } = useClients();
   const dasParties = useDasParties();
   const { name, park, choices, type, subtype, start } = booking;
@@ -45,7 +42,6 @@ export default function BookingDetails({
           dasParties.find(p => p.primaryGuest.id === g.id)
         )
       : undefined;
-  const rebooking = useRebooking();
   const [guests, setGuests] = useState(
     booking.cancellable && (type !== 'DAS' || dasGuest)
       ? booking.guests
@@ -78,20 +74,7 @@ export default function BookingDetails({
     <Screen
       title={'Your ' + titles[type]}
       theme={theme}
-      buttons={
-        booking.modifiable &&
-        !isNew && (
-          <Button
-            onClick={() => {
-              rebooking.begin(booking);
-              setPark(booking.park);
-              goBack({ screen: Home, props: { tabName: 'LL' } });
-            }}
-          >
-            Modify
-          </Button>
-        )
-      }
+      buttons={!unmodifiable && !isNew && <ModifyButton booking={booking} />}
       subhead={<Time date={parkDate(start)} />}
     >
       {choices ? (
@@ -120,29 +103,13 @@ export default function BookingDetails({
         <ReturnTime
           {...booking}
           button={
+            !unmodifiable &&
             ll.rules.timeSelect &&
             booking.modifiable && (
               <Button
                 type="small"
                 onClick={() => {
-                  loadData(
-                    async () => {
-                      rebooking.end();
-                      goTo(
-                        <SelectReturnTime
-                          offer={await ll.offer(
-                            { ...booking, flex: {} },
-                            booking.guests,
-                            { booking }
-                          )}
-                          onOfferChange={offer => {
-                            goTo(<BookNewReturnTime offer={offer} />);
-                          }}
-                        />
-                      );
-                    },
-                    { messages: { OfferError: 'No other times available' } }
-                  );
+                  goTo(<ChangeBookingTime booking={booking} />);
                 }}
               >
                 Change
@@ -218,7 +185,6 @@ export default function BookingDetails({
           Show Plans
         </FloatingButton>
       )}
-      {loaderElem}
     </Screen>
   );
 }

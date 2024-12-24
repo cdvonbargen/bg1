@@ -4,9 +4,10 @@ import { LightningLane, isType } from '@/api/itinerary';
 import { Guest, Offer, OfferError, OfferExperience } from '@/api/ll';
 import FloatingButton from '@/components/FloatingButton';
 import Screen from '@/components/Screen';
+import Spinner from '@/components/Spinner';
 import { useBookingDate } from '@/contexts/BookingDate';
 import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
+import { useNav, useScreenState } from '@/contexts/Nav';
 import { Party, PartyProvider } from '@/contexts/Party';
 import { usePlans } from '@/contexts/Plans';
 import { useRebooking } from '@/contexts/Rebooking';
@@ -16,8 +17,8 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { ping } from '@/ping';
 
 import BookingDate from '../BookingDate';
-import PlansButton from '../PlansButton';
 import RebookingHeader from '../RebookingHeader';
+import YourDayButton from '../YourDayButton';
 import NoEligibleGuests from './BookExperience/NoEligibleGuests';
 import NoGuestsFound from './BookExperience/NoGuestsFound';
 import NoReservationsAvailable from './BookExperience/NoReservationsAvailable';
@@ -31,14 +32,20 @@ export default function BookExperience({
   experience: OfferExperience;
 }) {
   const { goTo } = useNav();
+  const { isActiveScreen } = useScreenState();
   const resort = useResort();
   const { ll } = useClients();
-  const { plans, refreshPlans } = usePlans();
+  const { plans, plansLoaded, refreshPlans } = usePlans();
   const { bookingDate } = useBookingDate();
   const rebooking = useRebooking();
   const [party, setParty] = useState<Party>();
   const [offer, setOffer] = useState<Offer | null | undefined>();
   const { loadData, loaderElem } = useDataLoader();
+
+  useEffect(() => {
+    if (!isActiveScreen) return;
+    setOffer(offer => (offer && offer !== ll.lastOffer ? undefined : offer));
+  }, [isActiveScreen, ll]);
 
   useEffect(() => {
     setParty(undefined);
@@ -117,12 +124,12 @@ export default function BookExperience({
   }, [plans, ll, experience, bookingDate, rebooking, loadData]);
 
   useEffect(() => {
-    if (!party) loadParty();
-  }, [party, loadParty]);
+    if (!party && plansLoaded) loadParty();
+  }, [party, plansLoaded, loadParty]);
 
   const refreshOffer = useCallback(
     (first = false) => {
-      if (!party || party.selected.length === 0) return;
+      if (!isActiveScreen || !party || party.selected.length === 0) return;
 
       function updateParty({ guests }: Pick<Offer, 'guests'>) {
         setParty(party => ({
@@ -167,7 +174,7 @@ export default function BookExperience({
         }
       );
     },
-    [ll, experience, party, bookingDate, rebooking, loadData]
+    [ll, experience, party, bookingDate, rebooking, isActiveScreen, loadData]
   );
 
   useEffect(() => {
@@ -183,7 +190,7 @@ export default function BookExperience({
       theme={experience.park.theme}
       buttons={
         <>
-          <PlansButton />
+          <YourDayButton />
           <RefreshButton
             onClick={() => {
               if (noEligible) {
@@ -205,7 +212,7 @@ export default function BookExperience({
     >
       <h2>{experience.name}</h2>
       <div>{experience.park.name}</div>
-      {party && (
+      {party ? (
         <PartyProvider value={party}>
           {noGuestsFound ? (
             <NoGuestsFound onRefresh={loadParty} />
@@ -224,7 +231,9 @@ export default function BookExperience({
             </>
           )}
         </PartyProvider>
-      )}
+      ) : !plansLoaded ? (
+        <Spinner />
+      ) : null}
       {loaderElem}
     </Screen>
   );

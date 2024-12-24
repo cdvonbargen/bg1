@@ -9,7 +9,7 @@ import { Party, PartyProvider } from '@/contexts/Party';
 import IneligibleGuestList from '../IneligibleGuestList';
 
 export default function ModifyParty({ party }: { party: Party }) {
-  const { eligible, ineligible, selected, setSelected, experience } = party;
+  const { eligible, ineligible, selected, experience } = party;
   const [newParty, setNewParty] = useState<Set<Guest>>(new Set(selected));
   const { maxPartySize } = useClients().ll.rules;
 
@@ -42,7 +42,7 @@ export default function ModifyParty({ party }: { party: Party }) {
           back
           disabled={newParty.size === 0}
           onClick={() => {
-            setSelected(eligible.filter(g => newParty.has(g)));
+            party.setSelected(eligible.filter(g => newParty.has(g)));
           }}
         >
           Confirm Party

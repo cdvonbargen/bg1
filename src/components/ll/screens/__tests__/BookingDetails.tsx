@@ -10,7 +10,6 @@ import {
   mickey,
   minnie,
   mk,
-  modOffer,
   multiExp,
   pluto,
   renderResort,
@@ -24,22 +23,12 @@ import { ParkContext } from '@/contexts/Park';
 import { RebookingContext } from '@/contexts/Rebooking';
 import { DEFAULT_THEME } from '@/contexts/Theme';
 import { displayTime } from '@/datetime';
-import {
-  TODAY,
-  act,
-  click,
-  loading,
-  screen,
-  see,
-  setTime,
-  waitFor,
-} from '@/testing';
+import { act, click, screen, see, setTime, waitFor } from '@/testing';
 
-import BookNewReturnTime from '../BookNewReturnTime';
 import BookingDetails from '../BookingDetails';
 import CancelGuests from '../CancelGuests';
+import ChangeBookingTime from '../ChangeBookingTime';
 import Home from '../Home';
-import SelectReturnTime from '../SelectReturnTime';
 
 jest.mock('@/contexts/Nav');
 setTime('09:00');
@@ -70,7 +59,7 @@ describe('BookingDetails', () => {
 
   it('shows LL booking details', async () => {
     renderComponent(booking);
-    expect(see('Your Lightning Lane').tagName).toBe('H1');
+    await see.screen('Your Lightning Lane');
     see.time(booking.start.time as string);
     see.time(booking.end.time as string);
     see(mickey.name);
@@ -98,25 +87,8 @@ describe('BookingDetails', () => {
       new OfferError({ eligible: [], ineligible: booking.guests })
     );
     click('Change');
-    await loading();
-    see('No other times available');
-
-    ll.offer.mockResolvedValueOnce(modOffer);
-    click('Change');
-    await loading();
-    expect(ll.offer).toHaveBeenCalledTimes(2);
     expect(goTo).toHaveBeenLastCalledWith(
-      <SelectReturnTime offer={modOffer} onOfferChange={expect.any(Function)} />
-    );
-    const onOfferChange = goTo.mock.lastCall?.[0]?.props?.onOfferChange;
-    const newOffer = {
-      ...modOffer,
-      start: { date: TODAY, time: '14:00:00' },
-      end: { date: TODAY, time: '15:00:00' },
-    };
-    onOfferChange(newOffer);
-    expect(goTo).toHaveBeenLastCalledWith(
-      <BookNewReturnTime offer={newOffer} />
+      <ChangeBookingTime booking={booking} />
     );
 
     see.no('Show Plans', 'button');
@@ -200,14 +172,14 @@ describe('BookingDetails', () => {
     see('Your boarding group has been called');
   });
 
-  it('specifies DAS in heading', () => {
+  it('specifies DAS in heading', async () => {
     renderComponent({
       ...booking,
       type: 'DAS',
       subtype: 'IN_PARK',
       modifiable: undefined,
     } as DasBooking);
-    expect(see('Your DAS Selection').tagName).toBe('H1');
+    await see.screen('Your DAS Selection');
   });
 
   it('shows dining reservation', () => {
@@ -215,5 +187,11 @@ describe('BookingDetails', () => {
     see(lttRes.name);
     see.no('Cancel');
     see.no('Modify');
+  });
+
+  it("doesn't show Modify or Change buttons if unmodifiable", () => {
+    renderResort(<BookingDetails booking={booking} unmodifiable />);
+    see.no('Modify');
+    see.no('Change');
   });
 });

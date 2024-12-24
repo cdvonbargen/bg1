@@ -13,3 +13,5 @@ export const useScreenState = jest.fn(() => ({
   isActiveScreen: true,
   isFirstScreen: false,
 }));
+
+export class NavError extends Error {}

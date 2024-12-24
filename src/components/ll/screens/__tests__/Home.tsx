@@ -47,7 +47,7 @@ describe('Home', () => {
     await see.screen('Your Lightning Lane');
     click('Modify');
     await see.screen('LL');
-    expect(see(mk.name)).toBeEnabled();
+    expect(see(hs.name)).toBeEnabled();
     expect(Element.prototype.scroll).toHaveBeenCalledTimes(2);
 
     click('Plans');

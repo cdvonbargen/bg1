@@ -16,6 +16,7 @@ import { ping } from '@/ping';
 import BookingDate from '../BookingDate';
 import RebookingHeader from '../RebookingHeader';
 import ReturnTime from '../ReturnTime';
+import YourDayButton from '../YourDayButton';
 import BookingDetails from './BookingDetails';
 import Home from './Home';
 import SelectReturnTime from './SelectReturnTime';
@@ -59,6 +60,7 @@ export default function BookNewReturnTime({
         </>
       }
       theme={offer.experience.park.theme}
+      buttons={<YourDayButton />}
     >
       <h2>{offer.experience.name}</h2>
       <div>{offer.experience.park.name}</div>

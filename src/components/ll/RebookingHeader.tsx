@@ -10,7 +10,7 @@ export default function RebookingHeader() {
   return (
     <div>
       <div className="-mx-3">
-        <div className="pb-1">Modifying Reservation</div>
+        <h2 className="mt-0 pb-1 text-sm">Modifying Reservation</h2>
         <div className="px-3 py-2 bg-white text-black text-base font-normal normal-case text-left">
           <BookingListing
             booking={rebooking.current}

@@ -178,11 +178,16 @@ export abstract class LLClient extends ApiClient {
 
   protected partyIds = new Set<Guest['id']>();
   protected tracker: Public<LLTracker>;
+  #lastOffer: Offer | null = null;
   #primaryGuestId = '';
 
   constructor(resort: Resort, tracker?: Public<LLTracker>) {
     super(resort);
     this.tracker = tracker ?? new LLTracker();
+  }
+
+  get lastOffer() {
+    return this.#lastOffer;
   }
 
   setPartyIds(partyIds: string[]) {
@@ -314,6 +319,11 @@ export abstract class LLClient extends ApiClient {
       );
     });
     return { eligible, ineligible };
+  }
+
+  protected updateLastOffer<O extends Offer>(offer: O): O {
+    this.#lastOffer = offer;
+    return offer;
   }
 }
 

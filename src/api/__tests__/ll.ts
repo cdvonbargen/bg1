@@ -265,7 +265,9 @@ describe('LLClientWDW', () => {
 
     it('obtains Lightning Lane offer', async () => {
       respond(offerSetResponse());
-      expect(await client.offer(hm, guests, { date: TOMORROW })).toEqual(offer);
+      const newOffer = await client.offer(hm, guests, { date: TOMORROW });
+      expect(newOffer).toEqual(offer);
+      expect(client.lastOffer).toBe(newOffer);
       expectFetch('/ea-vas/planning/api/v1/experiences/offerset/generate', {
         data: {
           date: TOMORROW,
@@ -641,7 +643,9 @@ describe('LLClientDLR', () => {
           201
         )
       );
-      expect(await client.offer(hm, offer.guests.eligible)).toEqual(dlrOffer);
+      const newOffer = await client.offer(hm, offer.guests.eligible);
+      expect(newOffer).toEqual(dlrOffer);
+      expect(client.lastOffer).toBe(newOffer);
       expectFetch('/ea-vas/api/v2/products/flex/offers', {
         data: {
           guestIds: offer.guests.eligible.map(g => g.id),

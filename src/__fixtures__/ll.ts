@@ -5,7 +5,7 @@ import {
   ParkPass,
   Reservation,
 } from '@/api/itinerary';
-import { FlexExperience, HourlySlots, Offer } from '@/api/ll';
+import { FlexExperience, Guest, HourlySlots, Offer } from '@/api/ll';
 import { TODAY, TOMORROW } from '@/testing';
 
 import { ak, hs, itinerary, ll, mk, wdw } from './resort';
@@ -70,6 +70,11 @@ export const donald = {
   },
 };
 
+export const guests = {
+  eligible: [mickey, minnie, pluto],
+  ineligible: [donald],
+};
+
 export function omitOrderDetails<T extends { orderDetails?: unknown }>(
   guest: T
 ): Omit<T, 'orderDetails'> {
@@ -117,23 +122,34 @@ export const sdd: FlexExperience = {
   flex: { available: false },
 };
 
-export const booking: LightningLane = {
-  type: 'LL',
-  subtype: 'MP',
-  id: hm.id,
-  name: hm.name,
-  park: hm.park,
-  start: { date: TODAY, time: '11:00:00' },
-  end: { date: TODAY, time: '12:00:00' },
-  cancellable: true,
-  modifiable: true,
-  guests: [
-    { ...mickey, entitlementId: 'hm_01' },
-    { ...minnie, entitlementId: 'hm_02' },
-    { ...pluto, entitlementId: 'hm_03' },
-  ].map(omitOrderDetails),
-  bookingId: 'hm_01',
-};
+export function createBooking(
+  experience: FlexExperience,
+  {
+    date = TODAY,
+    guests = [mickey, minnie, pluto],
+    properties,
+  }: { date?: string; guests?: Guest[]; properties?: any } = {}
+): LightningLane {
+  const bookingGuests = guests
+    .map(omitOrderDetails)
+    .map(g => ({ ...g, entitlementId: `${experience.id}-${g.id}` }));
+  return {
+    type: 'LL',
+    subtype: 'MP',
+    id: experience.id,
+    name: experience.name,
+    park: experience.park,
+    start: { date, time: '11:00:00' },
+    end: { date, time: '12:00:00' },
+    cancellable: true,
+    modifiable: true,
+    guests: bookingGuests,
+    bookingId: bookingGuests[0].entitlementId,
+    ...properties,
+  };
+}
+
+export const booking = createBooking(hm);
 
 export const multiExp: LightningLane = {
   type: 'LL',
@@ -264,11 +280,15 @@ export const times: HourlySlots = [
 
 ll.nextBookTime = '11:00:00';
 
-jest.spyOn(ll, 'guests').mockResolvedValue({
-  eligible: [mickey, minnie, pluto],
-  ineligible: [donald],
-});
-jest.spyOn(ll, 'offer').mockResolvedValue(offer);
+export function mockOffer(offer: Offer) {
+  jest.spyOn(ll, 'offer').mockResolvedValue(offer);
+  jest.spyOn(ll, 'lastOffer', 'get').mockReturnValue(jest.mocked(offer));
+}
+
+mockOffer(offer);
+jest.spyOn(ll, 'guests').mockResolvedValue(guests);
+jest.spyOn(ll, 'times').mockResolvedValue(times);
+jest.spyOn(ll, 'changeOfferTime').mockResolvedValue(offer);
 jest.spyOn(ll, 'book').mockResolvedValue({ ...booking });
 jest.spyOn(ll, 'cancelBooking').mockResolvedValue(undefined);
 jest.spyOn(itinerary, 'plans').mockResolvedValue([...bookings]);

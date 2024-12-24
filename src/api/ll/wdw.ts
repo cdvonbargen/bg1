@@ -226,7 +226,7 @@ export class LLClientWDW extends LLClient {
         console.error(error);
       }
     }
-    return offer;
+    return this.updateLastOffer(offer);
   }
 
   async times(offer: Offer): Promise<HourlySlots> {
@@ -283,14 +283,14 @@ export class LLClientWDW extends LLClient {
         experienceIdsToIgnore: [],
       },
     });
-    return {
+    return this.updateLastOffer({
       ...offer,
       id: newOffer.offerId,
       offerSetId: newOffer.offerSetId,
       start: splitDateTime(newOffer.startDateTime),
       end: splitDateTime(newOffer.endDateTime),
       changed: newOffer.conflict === 'ALTERNATIVE_TIME_FOUND',
-    };
+    });
   }
 
   async book<B extends Offer['booking']>(

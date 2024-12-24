@@ -1,10 +1,14 @@
 import {
   booking,
+  createBooking,
   donald,
+  guests,
   hm,
+  itinerary,
   ll,
   mickey,
   minnie,
+  mockOffer,
   offer,
   pluto,
   renderResort,
@@ -16,8 +20,8 @@ import Button from '@/components/Button';
 import Screen from '@/components/Screen';
 import { BookingDateProvider } from '@/contexts/BookingDate';
 import { Nav, useNav } from '@/contexts/Nav';
-import { PlansContext } from '@/contexts/Plans';
-import { RebookingContext, RebookingProvider } from '@/contexts/Rebooking';
+import { PlansProvider } from '@/contexts/Plans';
+import { RebookingProvider } from '@/contexts/Rebooking';
 import { parkDate } from '@/datetime';
 import { ping } from '@/ping';
 import {
@@ -30,11 +34,9 @@ import {
   setTime,
 } from '@/testing';
 
-import BookingListing from '../../BookingListing';
 import RebookingHeader from '../../RebookingHeader';
 import BookExperience from '../BookExperience';
 
-jest.mock('@/components/ll/BookingListing');
 jest.mock('@/ping');
 jest.mock('@/timesync');
 setTime('09:00');
@@ -58,6 +60,19 @@ const mockClickResponse = async (
 const mockBook = (status: number) =>
   mockClickResponse(ll.book, 'Book Lightning Lane', status);
 
+function mockExperienceLimitReached() {
+  ll.guests.mockResolvedValue({
+    eligible: [],
+    ineligible: [
+      ...booking.guests.map(g => ({
+        ...g,
+        ineligibleReason: 'EXPERIENCE_LIMIT_REACHED' as const,
+      })),
+      donald,
+    ],
+  });
+}
+
 async function clickModify() {
   click('Modify');
   await see.screen('Modify Party');
@@ -68,45 +83,43 @@ async function clickConfirm() {
   await see.screen('Lightning Lane');
 }
 
-function expectModifying() {
-  see('Modifying Reservation');
-  expect(BookingListing).toHaveBeenCalledWith(
-    expect.objectContaining({ booking }),
-    {}
-  );
+function expectModifying(booking: LightningLane) {
+  const rbHeader = see('Modifying Reservation').closest('div') as HTMLElement;
+  expect(rbHeader).toHaveTextContent(booking.name);
   booking.guests.forEach(g => see(g.name));
   expect(ll.offer).toHaveBeenCalledWith(hm, booking.guests, { booking });
 }
 
-function StartScreen() {
-  const { goTo } = useNav();
-  return (
-    <Screen title="Start">
-      <RebookingHeader />
-      <Button onClick={() => goTo(<BookExperience experience={hm} />)}>
-        Start Test
-      </Button>
-    </Screen>
-  );
+async function goBack(screenTitle: string) {
+  click('Go Back');
+  await see.screen(screenTitle);
 }
 
-async function renderComponent(current?: LightningLane) {
+async function renderComponent({
+  screen,
+  rebook,
+}: { screen?: JSX.Element; rebook?: LightningLane } = {}) {
   renderResort(
-    <PlansContext.Provider
-      value={{ plans: [booking], refreshPlans: () => {}, loaderElem: null }}
-    >
+    <PlansProvider>
       <BookingDateProvider>
-        <RebookingContext.Provider
-          value={{ current, auto: false, begin: () => {}, end: () => {} }}
+        <RebookingProvider
+          value={
+            rebook
+              ? {
+                  current: rebook,
+                  auto: false,
+                  begin: jest.fn(),
+                  end: jest.fn(),
+                }
+              : undefined
+          }
         >
-          <Nav>
-            <BookExperience experience={hm} />
-          </Nav>
-        </RebookingContext.Provider>
+          <Nav>{screen ?? <BookExperience experience={hm} />}</Nav>
+        </RebookingProvider>
       </BookingDateProvider>
-    </PlansContext.Provider>
+    </PlansProvider>
   );
-  await loading();
+  if (!screen) await loading();
 }
 
 describe('BookExperience', () => {
@@ -114,6 +127,9 @@ describe('BookExperience', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockOffer(offer);
+    itinerary.plans.mockResolvedValue([booking]);
+    ll.guests.mockResolvedValue(guests);
     ll.rules.maxPartySize = maxPartySize;
   });
 
@@ -138,8 +154,29 @@ describe('BookExperience', () => {
     );
   });
 
+  it('requests a new offer when necessary', async () => {
+    await renderComponent();
+    click('Your Day');
+    await see.screen('Your Day');
+    await goBack('Lightning Lane');
+    click('Your Day');
+    await see.screen('Your Day');
+    expect(ll.offer).toHaveBeenCalledTimes(1);
+    click('More Info');
+    await see.screen('Your Lightning Lane');
+    mockOffer({ ...offer });
+    click('Change');
+    await see.screen('Select Return Time');
+    await goBack('Your Lightning Lane');
+    await goBack('Your Day');
+    expect(ll.offer).toHaveBeenCalledTimes(2);
+    await goBack('Lightning Lane');
+    await loading();
+    expect(ll.offer).toHaveBeenCalledTimes(3);
+  });
+
   it('removes offer-ineligible guests from selected party', async () => {
-    ll.offer.mockResolvedValueOnce({
+    mockOffer({
       ...offer,
       guests: {
         eligible: [minnie],
@@ -175,7 +212,7 @@ describe('BookExperience', () => {
   it('refreshes offer when Refresh button clicked', async () => {
     await renderComponent();
     see.time(offer.start.time);
-    ll.offer.mockResolvedValueOnce(newOffer);
+    mockOffer(newOffer);
     click('Refresh Offer');
     await loading();
     see.time(newOffer.start.time);
@@ -185,16 +222,18 @@ describe('BookExperience', () => {
   it('refreshes offer when someone added to party', async () => {
     await renderComponent();
     see.time(offer.start.time);
-    ll.offer.mockResolvedValueOnce(newOffer);
     await clickModify();
     click(mickey.name, 'checkbox');
     await clickConfirm();
+    expect(ll.offer).toHaveBeenCalledTimes(1);
     see.no(mickey.name);
     await clickModify();
     click(mickey.name, 'checkbox');
+    mockOffer(newOffer);
     await clickConfirm();
     await loading();
     see(mickey.name);
+    expect(ll.offer).toHaveBeenCalledTimes(2);
     see.time(newOffer.start.time);
   });
 
@@ -272,7 +311,7 @@ describe('BookExperience', () => {
 
   it('limits offers to maxPartySize', async () => {
     ll.rules.maxPartySize = 2;
-    ll.offer.mockResolvedValueOnce({
+    mockOffer({
       ...offer,
       guests: {
         eligible: offer.guests.eligible.slice(0, 2),
@@ -291,49 +330,32 @@ describe('BookExperience', () => {
   });
 
   it('can modify an existing reservation', async () => {
-    await renderComponent(booking);
+    await renderComponent({ rebook: booking });
     expect(ll.guests).not.toHaveBeenCalled();
-    expectModifying();
+    expectModifying(booking);
   });
 
   it('can modify same experience even if rebooking not started', async () => {
-    const otherDayBooking = {
-      ...booking,
-      start: { date: YESTERDAY, time: '09:00:00' },
-      end: { date: YESTERDAY, time: '10:00:00' },
-    };
-    ll.guests.mockResolvedValueOnce({
-      eligible: [],
-      ineligible: [
-        ...booking.guests.map(g => ({
-          ...g,
-          ineligibleReason: 'EXPERIENCE_LIMIT_REACHED' as const,
-        })),
-        donald,
-      ],
-    });
-    renderResort(
-      <PlansContext.Provider
-        value={{
-          plans: [otherDayBooking, booking],
-          plansLoaded: true,
-          refreshPlans: () => {},
-          loaderElem: null,
-        }}
-      >
-        <BookingDateProvider>
-          <RebookingProvider>
-            <Nav>
-              <StartScreen />
-            </Nav>
-          </RebookingProvider>
-        </BookingDateProvider>
-      </PlansContext.Provider>
-    );
+    function StartScreen() {
+      const { goTo } = useNav();
+      return (
+        <Screen title="Start">
+          <RebookingHeader />
+          <Button onClick={() => goTo(<BookExperience experience={hm} />)}>
+            Start Test
+          </Button>
+        </Screen>
+      );
+    }
+
+    mockExperienceLimitReached();
+    const otherDayBooking = createBooking(hm, { date: YESTERDAY });
+    itinerary.plans.mockResolvedValue([otherDayBooking, booking]);
+    await renderComponent({ screen: <StartScreen /> });
     click('Start Test');
     await see.screen('Lightning Lane');
     await loading();
-    expectModifying();
+    expectModifying(booking);
     click('Go Back');
     await see.screen('Start');
     see.no('Modifying Reservation');

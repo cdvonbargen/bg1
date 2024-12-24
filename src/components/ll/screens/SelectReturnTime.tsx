@@ -6,13 +6,13 @@ import Screen from '@/components/Screen';
 import { useClients } from '@/contexts/Clients';
 import { useNav } from '@/contexts/Nav';
 import { useRebooking } from '@/contexts/Rebooking';
-import { displayTime } from '@/datetime';
+import { displayTime, parkDate } from '@/datetime';
 import useDataLoader from '@/hooks/useDataLoader';
 
 import BookingDate from '../BookingDate';
-import PlansButton from '../PlansButton';
 import RebookingHeader from '../RebookingHeader';
 import ReturnTime from '../ReturnTime';
+import YourDayButton from '../YourDayButton';
 import RefreshButton from './RefreshButton';
 
 export default function SelectReturnTime<B extends Offer['booking']>({
@@ -70,7 +70,7 @@ export default function SelectReturnTime<B extends Offer['booking']>({
       title="Select Return Time"
       buttons={
         <>
-          <PlansButton />
+          <YourDayButton date={parkDate(offer.start)} unmodifiable />
           <RefreshButton name="Times" onClick={refreshTimes} />
         </>
       }

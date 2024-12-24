@@ -104,7 +104,7 @@ export class LLClientDLR extends LLClient {
       ineligible: (ineligibleGuests || []).map(this.convertGuest),
     };
     if (status !== 'ACTIVE') throw new OfferError(party);
-    return {
+    return this.updateLastOffer({
       id,
       start: { date, time: startTime },
       end: { date, time: endTime },
@@ -112,7 +112,7 @@ export class LLClientDLR extends LLClient {
       booking: booking as B,
       guests: party,
       experience,
-    };
+    });
   }
 
   async times() {

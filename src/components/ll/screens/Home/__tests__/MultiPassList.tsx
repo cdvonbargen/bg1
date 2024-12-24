@@ -58,6 +58,7 @@ describe('MultiPassList', () => {
           <PlansContext.Provider
             value={{
               plans: [booking],
+              plansLoaded: true,
               refreshPlans: () => {},
               loaderElem: null,
             }}
