@@ -6,6 +6,8 @@ import { avatarUrl } from './avatar';
 import { ApiClient } from './client';
 import { Experience, InvalidId, Park } from './resort';
 
+const RES_EXPIRATION_MINUTES = 60;
+
 const RESORT_TO_ITINERARY_API_NAME = {
   WDW: 'wdw-itinerary-api',
   DLR: 'dlr-itinerary-web-api',
@@ -219,6 +221,9 @@ export class ItineraryClient extends ApiClient {
       };
     };
 
+    const earliestRes = new Date();
+    earliestRes.setMinutes(earliestRes.getMinutes() - RES_EXPIRATION_MINUTES);
+
     const getReservation = (item: ReservationItem) => {
       const activityAsset = assets[item.asset];
       const facilityAsset = assets[activityAsset.facility];
@@ -226,6 +231,7 @@ export class ItineraryClient extends ApiClient {
       const park = this.park(parkIdStr);
       if (park.name === '' && parkIdStr) park.name = assets[parkIdStr].name;
       const start = new Date(item.startDateTime);
+      if (start < earliestRes) return;
       const res: Reservation = {
         type: 'RES',
         subtype: item.type,

@@ -4,6 +4,7 @@ import {
   booking,
   bookings,
   hm,
+  lttRes,
   mickey,
   minnie,
   mk,
@@ -24,7 +25,7 @@ describe('ItineraryClient', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    setTime('10:00');
+    setTime(lttRes.start.time, 60);
   });
 
   describe('plans()', () => {
@@ -173,6 +174,12 @@ describe('ItineraryClient', () => {
       respond(bookingsResponse(bookings));
       expect(await client.plans()).toEqual(bookings);
       expect(client.onRefresh).toHaveBeenCalledTimes(1);
+    });
+
+    it('ignores non-LL reservations >60 minutes old', async () => {
+      setTime(lttRes.start.time, 61);
+      respond(bookingsResponse(bookings));
+      expect(await client.plans()).toEqual(bookings.filter(b => b !== lttRes));
     });
 
     it('includes park data', async () => {
