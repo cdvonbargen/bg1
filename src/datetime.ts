@@ -1,4 +1,6 @@
-export function dateObject(dt: Date | number | string): Date {
+export type Dateable = Date | number | string;
+
+export function dateObject(dt: Dateable): Date {
   return typeof dt === 'string' && !dt.includes('T')
     ? new Date(dt + 'T00:00:00')
     : new Date(dt);
@@ -11,11 +13,11 @@ export class DateFormat {
     this.fmt = Intl.DateTimeFormat('en-US', options);
   }
 
-  format(date: Date | number | string) {
+  format(date: Dateable) {
     return this.fmt.format(dateObject(date));
   }
 
-  parts(date: Date | number | string): {
+  parts(date: Dateable): {
     [P in Intl.DateTimeFormatPartTypes]?: string;
   } {
     return Object.fromEntries(
@@ -44,7 +46,7 @@ export class DateTime {
     });
   }
 
-  constructor(date?: Date | number) {
+  constructor(date?: Dateable) {
     const dt = DateTime.format.parts(dateObject(date ?? Date.now()));
     this.date = `${dt.year}-${dt.month}-${dt.day}`;
     this.time = `${dt.hour}:${dt.minute}:${dt.second}`;
@@ -53,7 +55,7 @@ export class DateTime {
 
 DateTime.setTimeZone('America/New_York');
 
-export function dateString(date: Date | number | string) {
+export function dateString(date: Dateable) {
   date = dateObject(date);
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -61,7 +63,7 @@ export function dateString(date: Date | number | string) {
   return `${y}-${m}-${d}`;
 }
 
-export function modifyDate(date: Date | number | string, days: number) {
+export function modifyDate(date: Dateable, days: number) {
   date = dateObject(date);
   if (days) date.setDate(date.getDate() + days);
   return dateString(date);
