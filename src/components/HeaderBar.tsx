@@ -8,12 +8,12 @@ import Button from './Button';
 
 export default function HeaderBar({
   title,
+  buttons,
   subhead,
-  children,
 }: {
   title: React.ReactNode;
+  buttons?: React.ReactNode;
   subhead?: React.ReactNode;
-  children?: React.ReactNode;
 }) {
   const { isFirstScreen } = useScreenState();
   const { bg, text } = useTheme();
@@ -42,7 +42,7 @@ export default function HeaderBar({
         <h1 className="flex-1 self-center py-1 text-xl font-semibold overflow-hidden whitespace-nowrap">
           {title}
         </h1>
-        {changeButtonColors(children)}
+        {changeButtonColors(buttons)}
       </div>
       <div
         className={`empty:hidden flex flex-col gap-y-1 pb-1 ${bg} text-white text-sm font-semibold uppercase text-center`}

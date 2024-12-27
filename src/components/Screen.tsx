@@ -31,9 +31,7 @@ export default function Screen({
   return (
     <ThemeProvider value={theme}>
       <div className="fixed inset-0 flex flex-col">
-        <HeaderBar title={title} subhead={subhead}>
-          {buttons}
-        </HeaderBar>
+        <HeaderBar title={title} buttons={buttons} subhead={subhead} />
         <div
           ref={contentRef}
           className="relative flex-1 overflow-auto px-3 pb-5"
