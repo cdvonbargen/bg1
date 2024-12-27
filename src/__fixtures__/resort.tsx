@@ -1,7 +1,7 @@
 import * as data from '@/api/data/wdw';
 import { Resort } from '@/api/resort';
-import { ClientsProvider, createClients } from '@/contexts/Clients';
-import { ResortProvider } from '@/contexts/Resort';
+import ClientsContext, { createClients } from '@/contexts/ClientsContext';
+import ResortContext from '@/contexts/ResortContext';
 import { render } from '@/testing';
 
 const hm = '80010208';
@@ -16,9 +16,9 @@ const clients = jest.mocked(createClients(wdw));
 
 export function renderResort(children: React.ReactNode) {
   return render(
-    <ResortProvider value={wdw}>
-      <ClientsProvider value={clients}>{children}</ClientsProvider>
-    </ResortProvider>
+    <ResortContext value={wdw}>
+      <ClientsContext value={clients}>{children}</ClientsContext>
+    </ResortContext>
   );
 }
 

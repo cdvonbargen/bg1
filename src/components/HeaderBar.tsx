@@ -1,7 +1,7 @@
-import { Children, Fragment, isValidElement } from 'react';
+import { Children, Fragment, isValidElement, use } from 'react';
 
-import { useScreenState } from '@/contexts/Nav';
-import { useTheme } from '@/contexts/Theme';
+import ThemeContext from '@/contexts/ThemeContext';
+import useScreenState from '@/hooks/useScreenState';
 import BackIcon from '@/icons/BackIcon';
 
 import Button from './Button';
@@ -16,7 +16,7 @@ export default function HeaderBar({
   subhead?: React.ReactNode;
 }) {
   const { isFirstScreen } = useScreenState();
-  const { bg, text } = useTheme();
+  const theme = use(ThemeContext);
 
   function changeButtonColors(node: React.ReactNode): React.ReactNode {
     if (!isValidElement(node) || typeof node.type === 'string') return node;
@@ -26,13 +26,13 @@ export default function HeaderBar({
     ) : (
       <n.type
         {...n.props}
-        className={`min-h-[36px] bg-white bg-opacity-90 ${text} ${n.props.className || ''}`}
+        className={`min-h-[36px] bg-white bg-opacity-90 ${theme.text} ${n.props.className || ''}`}
       />
     );
   }
 
   return (
-    <div className={`px-3 ext-lg text-white ${bg}`}>
+    <div className={`px-3 ext-lg text-white ${theme.bg}`}>
       <div className="flex flex-wrap justify-end gap-x-2 gap-y-1 min-h-[36px] py-2">
         {!isFirstScreen && (
           <Button back className="-my-2 -ml-3" title="Go Back">
@@ -45,7 +45,7 @@ export default function HeaderBar({
         {changeButtonColors(buttons)}
       </div>
       <div
-        className={`empty:hidden flex flex-col gap-y-1 pb-1 ${bg} text-white text-sm font-semibold uppercase text-center`}
+        className={`empty:hidden flex flex-col gap-y-1 pb-1 ${theme.bg} text-white text-sm font-semibold uppercase text-center`}
       >
         {subhead}
       </div>

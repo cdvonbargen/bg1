@@ -1,14 +1,16 @@
+import { use } from 'react';
+
 import Notice from '@/components/Notice';
 import { Time } from '@/components/Time';
-import { useClients } from '@/contexts/Clients';
-import { useRebooking } from '@/contexts/Rebooking';
+import ClientsContext from '@/contexts/ClientsContext';
+import RebookingContext from '@/contexts/RebookingContext';
 import { DateTime } from '@/datetime';
 
 import IneligibleGuestList from '../../IneligibleGuestList';
 
 export default function NoEligibleGuests() {
-  const { ll } = useClients();
-  const rebooking = useRebooking();
+  const { ll } = use(ClientsContext);
+  const rebooking = use(RebookingContext);
   return (
     <>
       {rebooking.current ? (

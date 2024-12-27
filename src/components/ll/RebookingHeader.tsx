@@ -1,11 +1,13 @@
-import { useRebooking } from '@/contexts/Rebooking';
+import { use } from 'react';
+
+import RebookingContext from '@/contexts/RebookingContext';
 
 import Button from '../Button';
 import BookingListing from './BookingListing';
 import Home from './screens/Home';
 
 export default function RebookingHeader() {
-  const rebooking = useRebooking();
+  const rebooking = use(RebookingContext);
   if (!rebooking.current) return null;
   return (
     <div>

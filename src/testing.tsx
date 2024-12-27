@@ -10,8 +10,10 @@ import {
   within,
 } from '@testing-library/react';
 
+import NavContext from './contexts/NavContext';
 import { displayTime } from './datetime';
 
+/* eslint-disable-next-line react-refresh/only-export-components */
 export * from '@testing-library/react';
 
 export const YESTERDAY = '2021-09-30';
@@ -177,3 +179,11 @@ export function revisitTab(delaySec = 60) {
     toggleVisibility();
   });
 }
+
+export const nav = {
+  goTo: jest.fn(),
+  goBack: jest.fn(),
+  Provider: ({ children }: { children: React.ReactNode }) => {
+    return <NavContext value={nav}>{children}</NavContext>;
+  },
+};

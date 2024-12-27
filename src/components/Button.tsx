@@ -1,5 +1,7 @@
-import { NavError, useNav } from '@/contexts/Nav';
-import { useTheme } from '@/contexts/Theme';
+import { use } from 'react';
+
+import NavContext, { NavError } from '@/contexts/NavContext';
+import ThemeContext from '@/contexts/ThemeContext';
 
 const TYPES = {
   normal: 'py-1',
@@ -14,11 +16,10 @@ export default function Button<P>(
     back?: boolean | { screen?: React.FC<P>; props?: Partial<P> };
   }
 ) {
-  const { goBack } = useNav();
+  const { goBack } = use(NavContext);
   const { type, back, onClick, className, ...attrs } = props;
   let cls = `${TYPES[type || 'normal']} ${className || ''}`;
-  const { bg } = useTheme();
-  if (!cls.includes(' bg-')) cls += ` ${bg} text-white`;
+  if (!cls.includes(' bg-')) cls += ` ${use(ThemeContext).bg} text-white`;
   return (
     <button
       onClick={async event => {

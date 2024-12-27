@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 
 import {
   ConflictsError,
@@ -12,10 +12,10 @@ import Button from '@/components/Button';
 import FloatingButton from '@/components/FloatingButton';
 import GuestList from '@/components/GuestList';
 import Screen from '@/components/Screen';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
-import { usePlans } from '@/contexts/Plans';
-import { useResort } from '@/contexts/Resort';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
+import PlansContext from '@/contexts/PlansContext';
+import ResortContext from '@/contexts/ResortContext';
 import useDataLoader from '@/hooks/useDataLoader';
 import { ping } from '@/ping';
 
@@ -30,10 +30,10 @@ export default function DasSelection({
   park: Park;
   party: DasParty;
 }) {
-  const { goTo, goBack } = useNav();
-  const resort = useResort();
-  const { das } = useClients();
-  const { refreshPlans } = usePlans();
+  const { goTo, goBack } = use(NavContext);
+  const resort = use(ResortContext);
+  const { das } = use(ClientsContext);
+  const { refreshPlans } = use(PlansContext);
   const [experience, setExperience] = useState<Experience>();
   const [selected, setSelected] = useState<Set<Guest>>(
     new Set(

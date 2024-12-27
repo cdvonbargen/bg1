@@ -1,7 +1,8 @@
+import { use } from 'react';
+
 import Screen from '@/components/Screen';
 import { Time } from '@/components/Time';
-import { usePlans } from '@/contexts/Plans';
-import { useTheme } from '@/contexts/Theme';
+import PlansContext from '@/contexts/PlansContext';
 import { parkDate } from '@/datetime';
 
 import BookingListing from '../BookingListing';
@@ -15,8 +16,7 @@ export default function YourDay({
   date: string;
   unmodifiable?: boolean;
 }) {
-  const theme = useTheme();
-  const { plans } = usePlans();
+  const { plans } = use(PlansContext);
   const dayPlans = plans.filter(b => parkDate(b.start) === date);
   const parks = [...new Set(dayPlans.map(b => b.park))];
   const nonAprPlans = dayPlans.filter(b => b.type !== 'APR');
@@ -25,7 +25,7 @@ export default function YourDay({
     <Screen
       title="Your Day"
       subhead={<Time date={date} />}
-      theme={parks[0]?.theme ?? theme}
+      theme={parks[0]?.theme}
     >
       {nonAprPlans && nonAprPlans.length > 0 ? (
         <ul>

@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
-type FlashType = 'alert' | 'error';
+import Flash, { FlashType } from '@/components/Flash';
 
 const DEFAULT_DURATION_MS = 3000;
-const COLORS = { alert: 'bg-yellow-200', error: 'bg-red-200' };
 
 export default function useFlash(): [React.ReactNode, typeof flash] {
   const [message, setMessage] = useState('');
@@ -23,15 +22,4 @@ export default function useFlash(): [React.ReactNode, typeof flash] {
   }, []);
   const flashElem = message ? <Flash message={message} type={type} /> : null;
   return [flashElem, flash];
-}
-
-export function Flash({ message, type }: { message: string; type: FlashType }) {
-  return message ? (
-    <div
-      role="alert"
-      className={`fixed bottom-20 left-0 w-full p-2 font-semibold text-center ${COLORS[type]} text-gray-800`}
-    >
-      {message}
-    </div>
-  ) : null;
 }

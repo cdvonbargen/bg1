@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useTransition } from 'react';
 
 import Spinner from '@/components/Spinner';
 import useFlash from '@/hooks/useFlash';
@@ -22,7 +22,7 @@ export default function useDataLoader(): {
   loadData: DataLoader;
   flash: typeof flash;
 } {
-  const [loadCount, setLoadCount] = useState(0);
+  const [isPending, startTransition] = useTransition();
   const [flashElem, flash] = useFlash();
 
   const loadData = useCallback<DataLoader>(
@@ -40,32 +40,34 @@ export default function useDataLoader(): {
         flashArgs = args;
       }
 
-      setLoadCount(count => count + 1);
-      const awaken = sleep(minLoadTime);
-      try {
-        await callback(setFlashArgs);
-      } catch (error: any) {
-        const status = error?.response?.status;
-        if (error instanceof Error && msgs[error.name]) {
-          setFlashArgs(msgs[error.name], 'error');
-        } else if (Number.isInteger(status)) {
-          setFlashArgs(status in msgs ? msgs[status] : msgs.request, 'error');
-        } else {
-          console.error(error);
-          setFlashArgs(msgs.error, 'error');
+      startTransition(async () => {
+        const awaken = sleep(minLoadTime);
+        try {
+          await callback(setFlashArgs);
+        } catch (error: any) {
+          const status = error?.response?.status;
+          if (error instanceof Error && msgs[error.name]) {
+            setFlashArgs(msgs[error.name], 'error');
+          } else if (Number.isInteger(status)) {
+            setFlashArgs(status in msgs ? msgs[status] : msgs.request, 'error');
+          } else {
+            console.error(error);
+            setFlashArgs(msgs.error, 'error');
+          }
         }
-      }
-      await awaken;
-      setLoadCount(count => count - 1);
-      flash(...flashArgs);
+        await awaken;
+        startTransition(() => {
+          flash(...flashArgs);
+        });
+      });
     },
     [flash]
   );
 
   const loaderElem =
-    loadCount > 0 || flashElem ? (
+    isPending || flashElem ? (
       <>
-        {loadCount > 0 && <Spinner />}
+        {isPending && <Spinner />}
         {flashElem}
       </>
     ) : null;

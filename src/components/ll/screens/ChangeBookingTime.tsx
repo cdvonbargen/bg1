@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import { LightningLane, Offer } from '@/api/ll';
 import Button from '@/components/Button';
 import Screen from '@/components/Screen';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
 import useDataLoader from '@/hooks/useDataLoader';
 
 import BookingDate from '../BookingDate';
@@ -19,8 +19,8 @@ export default function ChangeBookingTime({
 }: {
   booking: LightningLane;
 }) {
-  const { goTo } = useNav();
-  const { ll } = useClients();
+  const { goTo } = use(NavContext);
+  const { ll } = use(ClientsContext);
   const { loadData, loaderElem } = useDataLoader();
   const [offer, setOffer] = useState<Offer<LightningLane>>();
 

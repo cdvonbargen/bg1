@@ -1,6 +1,8 @@
+import { use } from 'react';
+
 import { FlexExperience } from '@/api/ll';
 import Button from '@/components/Button';
-import { useNav } from '@/contexts/Nav';
+import NavContext from '@/contexts/NavContext';
 import { displayTime } from '@/datetime';
 
 import BookExperience from '../BookExperience';
@@ -11,7 +13,7 @@ export default function LLButton({
 }: {
   experience: FlexExperience;
 }) {
-  const { goTo } = useNav();
+  const { goTo } = use(NavContext);
   const { flex, standby } = experience;
 
   return (

@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import { Experience } from '@/api/das';
 import { Park } from '@/api/resort';
 import Button from '@/components/Button';
 import Screen from '@/components/Screen';
-import { useClients } from '@/contexts/Clients';
+import ClientsContext from '@/contexts/ClientsContext';
 import { DateTime, timeToMinutes } from '@/datetime';
 import useDataLoader from '@/hooks/useDataLoader';
 
@@ -17,7 +17,7 @@ export default function DasExperienceList({
   park: Park;
   onSelect: (experience: Experience) => void;
 }) {
-  const { das } = useClients();
+  const { das } = use(ClientsContext);
   const { loadData, loaderElem } = useDataLoader();
   const [experiences, setExperiences] = useState<Experience[]>();
 

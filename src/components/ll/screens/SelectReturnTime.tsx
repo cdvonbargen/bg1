@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect, useState } from 'react';
 
 import { HourlySlots, Offer } from '@/api/ll';
 import Button from '@/components/Button';
 import Screen from '@/components/Screen';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
-import { useRebooking } from '@/contexts/Rebooking';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
+import RebookingContext from '@/contexts/RebookingContext';
 import { displayTime, parkDate } from '@/datetime';
 import useDataLoader from '@/hooks/useDataLoader';
 
@@ -22,9 +22,9 @@ export default function SelectReturnTime<B extends Offer['booking']>({
   offer: Offer<B>;
   onOfferChange: (offer: Offer<B>) => void;
 }) {
-  const { goBack } = useNav();
-  const { ll } = useClients();
-  const rebooking = useRebooking();
+  const { goBack } = use(NavContext);
+  const { ll } = use(ClientsContext);
+  const rebooking = use(RebookingContext);
   const { loadData, loaderElem } = useDataLoader();
   const [times, setTimes] = useState<HourlySlots>();
   const { booking } = offer;

@@ -1,6 +1,8 @@
+import { use } from 'react';
+
 import { Booking } from '@/api/itinerary';
-import { useNav } from '@/contexts/Nav';
-import { useTheme } from '@/contexts/Theme';
+import NavContext from '@/contexts/NavContext';
+import ThemeContext from '@/contexts/ThemeContext';
 import ChevronRightIcon from '@/icons/ChevronRightIcon';
 
 import ReturnWindow from './ReturnWindow';
@@ -19,8 +21,8 @@ export default function BookingListing({
   details?: boolean;
   unmodifiable?: boolean;
 }) {
-  const { goTo } = useNav();
-  const theme = useTheme();
+  const { goTo } = use(NavContext);
+  const theme = use(ThemeContext);
   return (
     <div
       className="flex items-center gap-x-3"

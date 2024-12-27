@@ -1,19 +1,20 @@
-import { useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect, useState } from 'react';
 
 import { LightningLane, isType } from '@/api/itinerary';
 import { Guest, Offer, OfferError, OfferExperience } from '@/api/ll';
 import FloatingButton from '@/components/FloatingButton';
 import Screen from '@/components/Screen';
 import Spinner from '@/components/Spinner';
-import { useBookingDate } from '@/contexts/BookingDate';
-import { useClients } from '@/contexts/Clients';
-import { useNav, useScreenState } from '@/contexts/Nav';
-import { Party, PartyProvider } from '@/contexts/Party';
-import { usePlans } from '@/contexts/Plans';
-import { useRebooking } from '@/contexts/Rebooking';
-import { useResort } from '@/contexts/Resort';
+import BookingDateContext from '@/contexts/BookingDateContext';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
+import PartyContext, { Party } from '@/contexts/PartyContext';
+import PlansContext from '@/contexts/PlansContext';
+import RebookingContext from '@/contexts/RebookingContext';
+import ResortContext from '@/contexts/ResortContext';
 import { parkDate } from '@/datetime';
 import useDataLoader from '@/hooks/useDataLoader';
+import useScreenState from '@/hooks/useScreenState';
 import { ping } from '@/ping';
 
 import BookingDate from '../BookingDate';
@@ -31,13 +32,13 @@ export default function BookExperience({
 }: {
   experience: OfferExperience;
 }) {
-  const { goTo } = useNav();
+  const { goTo } = use(NavContext);
   const { isActiveScreen } = useScreenState();
-  const resort = useResort();
-  const { ll } = useClients();
-  const { plans, plansLoaded, refreshPlans } = usePlans();
-  const { bookingDate } = useBookingDate();
-  const rebooking = useRebooking();
+  const resort = use(ResortContext);
+  const { ll } = use(ClientsContext);
+  const { plans, plansLoaded, refreshPlans } = use(PlansContext);
+  const { bookingDate } = use(BookingDateContext);
+  const rebooking = use(RebookingContext);
   const [party, setParty] = useState<Party>();
   const [offer, setOffer] = useState<Offer | null | undefined>();
   const { loadData, loaderElem } = useDataLoader();
@@ -213,7 +214,7 @@ export default function BookExperience({
       <h2>{experience.name}</h2>
       <div>{experience.park.name}</div>
       {party ? (
-        <PartyProvider value={party}>
+        <PartyContext value={party}>
           {noGuestsFound ? (
             <NoGuestsFound onRefresh={loadParty} />
           ) : noEligible ? (
@@ -230,7 +231,7 @@ export default function BookExperience({
               } Lightning Lane`}</FloatingButton>
             </>
           )}
-        </PartyProvider>
+        </PartyContext>
       ) : !plansLoaded ? (
         <Spinner />
       ) : null}

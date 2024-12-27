@@ -1,6 +1,7 @@
-import { useBookingDate } from '@/contexts/BookingDate';
-import { useNav } from '@/contexts/Nav';
-import { ThemeProvider, useTheme } from '@/contexts/Theme';
+import { use } from 'react';
+
+import BookingDateContext from '@/contexts/BookingDateContext';
+import NavContext from '@/contexts/NavContext';
 import DayIcon from '@/icons/DayIcon';
 
 import Button from '../Button';
@@ -14,19 +15,14 @@ export default function YourDayButton({
   date?: string;
   unmodifiable?: boolean;
 }) {
-  const { goTo } = useNav();
-  const theme = useTheme();
-  const { bookingDate } = useBookingDate();
+  const { goTo } = use(NavContext);
+  const { bookingDate } = use(BookingDateContext);
   return (
     <>
       <Button
         {...buttonProps}
         onClick={() =>
-          goTo(
-            <ThemeProvider value={theme}>
-              <YourDay date={date ?? bookingDate} unmodifiable={changes} />
-            </ThemeProvider>
-          )
+          goTo(<YourDay date={date ?? bookingDate} unmodifiable={changes} />)
         }
         title="Your Day"
       >

@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { use, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { FlexExperience } from '@/api/ll';
 import { Park } from '@/api/resort';
 import Select from '@/components/Select';
-import { useBookingDate } from '@/contexts/BookingDate';
-import { useExperiences } from '@/contexts/Experiences';
-import { usePark } from '@/contexts/Park';
+import BookingDateContext from '@/contexts/BookingDateContext';
+import ExperiencesContext from '@/contexts/ExperiencesContext';
+import ParkContext from '@/contexts/ParkContext';
 import { parkDate, timeToMinutes } from '@/datetime';
 import useCoords, { Coords } from '@/hooks/useCoords';
 import kvdb from '@/kvdb';
@@ -62,10 +62,10 @@ function inPark(park: Park, coords: Coords) {
 }
 
 export default function useSort() {
-  const { park } = usePark();
-  const { experiences } = useExperiences();
+  const { park } = use(ParkContext);
+  const { experiences } = use(ExperiencesContext);
   const [coords, updateCoords] = useCoords();
-  const { bookingDate } = useBookingDate();
+  const { bookingDate } = use(BookingDateContext);
   const isToday = bookingDate === parkDate();
   const sortOptions = useMemo(
     () =>

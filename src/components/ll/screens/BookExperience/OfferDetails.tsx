@@ -1,7 +1,9 @@
+import { use } from 'react';
+
 import { Offer } from '@/api/ll';
 import Button from '@/components/Button';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
 
 import ReturnTime from '../../ReturnTime';
 import SelectReturnTime from '../SelectReturnTime';
@@ -14,8 +16,8 @@ export default function OfferDetails({
   offer: Offer;
   onOfferChange: (offer: Offer) => void;
 }) {
-  const { goTo } = useNav();
-  const { ll } = useClients();
+  const { goTo } = use(NavContext);
+  const { ll } = use(ClientsContext);
   return (
     <>
       <div className="flex items-center">

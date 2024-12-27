@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 
 import { DasBooking, LightningLane } from '@/api/itinerary';
 import FloatingButton from '@/components/FloatingButton';
 import GuestList from '@/components/GuestList';
 import Screen from '@/components/Screen';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
-import { usePlans } from '@/contexts/Plans';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
+import PlansContext from '@/contexts/PlansContext';
 import useDataLoader from '@/hooks/useDataLoader';
 
 import ReturnTime from '../ReturnTime';
@@ -20,10 +20,10 @@ export default function CancelGuests<B extends LightningLane | DasBooking>({
   onCancel: (newGuests: B['guests']) => void;
   dasGuest?: B['guests'][0];
 }) {
-  const { goBack } = useNav();
-  const { ll, das } = useClients();
+  const { goBack } = use(NavContext);
+  const { ll, das } = use(ClientsContext);
   const client = booking.type === 'DAS' ? das : ll;
-  const { refreshPlans } = usePlans();
+  const { refreshPlans } = use(PlansContext);
   const [guestsToCancel, setGuestsToCancel] = useState<
     Set<LightningLane['guests'][0]>
   >(new Set());

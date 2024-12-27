@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import { Guest, Queue } from '@/api/vq';
 import FloatingButton from '@/components/FloatingButton';
 import GuestList from '@/components/GuestList';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
 import useDataLoader from '@/hooks/useDataLoader';
 
 import JoinQueue from './JoinQueue';
 import QueueScreen from './QueueScreen';
 
 export default function ChooseParty({ queue }: { queue: Queue }) {
-  const { goTo } = useNav();
-  const { vq } = useClients();
+  const { goTo } = use(NavContext);
+  const { vq } = use(ClientsContext);
   const { loadData, loaderElem } = useDataLoader();
   const [guests, setGuests] = useState<Guest[]>([]);
   const [party, setParty] = useState<Set<Guest>>(new Set());

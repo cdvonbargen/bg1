@@ -1,9 +1,11 @@
+import { use } from 'react';
+
 import GuestList from '@/components/GuestList';
-import { useParty } from '@/contexts/Party';
+import PartyContext from '@/contexts/PartyContext';
 import { displayTime } from '@/datetime';
 
 export default function IneligibleGuestList() {
-  const { ineligible } = useParty();
+  const { ineligible } = use(PartyContext);
   return (
     <GuestList
       guests={ineligible}

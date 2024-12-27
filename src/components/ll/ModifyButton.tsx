@@ -1,9 +1,11 @@
+import { use } from 'react';
+
 import { Booking, isType } from '@/api/itinerary';
-import { useBookingDate } from '@/contexts/BookingDate';
-import { useClients } from '@/contexts/Clients';
-import { NavError, useNav } from '@/contexts/Nav';
-import { usePark } from '@/contexts/Park';
-import { useRebooking } from '@/contexts/Rebooking';
+import BookingDateContext from '@/contexts/BookingDateContext';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext, { NavError } from '@/contexts/NavContext';
+import ParkContext from '@/contexts/ParkContext';
+import RebookingContext from '@/contexts/RebookingContext';
 import { parkDate } from '@/datetime';
 
 import Button from '../Button';
@@ -15,11 +17,11 @@ type Props = Parameters<typeof Button>[0] & {
 };
 
 export default function ModifyButton({ booking, ...buttonProps }: Props) {
-  const { ll } = useClients();
-  const { goBack } = useNav();
-  const { park, setPark } = usePark();
-  const { setBookingDate } = useBookingDate();
-  const rebooking = useRebooking();
+  const { ll } = use(ClientsContext);
+  const { goBack } = use(NavContext);
+  const { park, setPark } = use(ParkContext);
+  const { setBookingDate } = use(BookingDateContext);
+  const rebooking = use(RebookingContext);
 
   const goHome = () => goBack({ screen: Home, props: { tabName: 'LL' } });
 

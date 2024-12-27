@@ -1,4 +1,4 @@
-import { DEFAULT_THEME } from '@/contexts/Theme';
+import { DEFAULT_THEME } from '@/contexts/ThemeContext';
 import { DateTime, parkDate } from '@/datetime';
 
 import { authStore } from './auth';

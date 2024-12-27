@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import { LightningLane, Offer } from '@/api/ll';
 import Button from '@/components/Button';
 import FloatingButton from '@/components/FloatingButton';
 import GuestList from '@/components/GuestList';
 import Screen from '@/components/Screen';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
-import { usePlans } from '@/contexts/Plans';
-import { useRebooking } from '@/contexts/Rebooking';
-import { useResort } from '@/contexts/Resort';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
+import PlansContext from '@/contexts/PlansContext';
+import RebookingContext from '@/contexts/RebookingContext';
+import ResortContext from '@/contexts/ResortContext';
 import useDataLoader from '@/hooks/useDataLoader';
 import { ping } from '@/ping';
 
@@ -26,12 +26,12 @@ export default function BookNewReturnTime({
 }: {
   offer: Offer<LightningLane>;
 }) {
-  const rebooking = useRebooking();
-  const { goTo, goBack } = useNav();
-  const resort = useResort();
-  const { ll } = useClients();
+  const rebooking = use(RebookingContext);
+  const { goTo, goBack } = use(NavContext);
+  const resort = use(ResortContext);
+  const { ll } = use(ClientsContext);
   const { loadData, loaderElem } = useDataLoader();
-  const { refreshPlans } = usePlans();
+  const { refreshPlans } = use(PlansContext);
   const [offer, setOffer] = useState(initialOffer);
 
   useEffect(() => {

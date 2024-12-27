@@ -1,18 +1,18 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, use, useEffect, useRef, useState } from 'react';
 
 import { isType } from '@/api/itinerary';
 import { Experience, FlexExperience } from '@/api/ll';
 import { Park } from '@/api/resort';
 import Screen from '@/components/Screen';
 import Tab from '@/components/Tab';
-import { useBookingDate } from '@/contexts/BookingDate';
-import { useClients } from '@/contexts/Clients';
-import { useExperiences } from '@/contexts/Experiences';
-import { useNav } from '@/contexts/Nav';
-import { usePark } from '@/contexts/Park';
-import { usePlans } from '@/contexts/Plans';
-import { useResort } from '@/contexts/Resort';
-import { useTheme } from '@/contexts/Theme';
+import BookingDateContext from '@/contexts/BookingDateContext';
+import ClientsContext from '@/contexts/ClientsContext';
+import ExperiencesContext from '@/contexts/ExperiencesContext';
+import NavContext from '@/contexts/NavContext';
+import ParkContext from '@/contexts/ParkContext';
+import PlansContext from '@/contexts/PlansContext';
+import ResortContext from '@/contexts/ResortContext';
+import ThemeContext from '@/contexts/ThemeContext';
 import {
   DateTime,
   displayTime,
@@ -20,6 +20,7 @@ import {
   timeToMinutes,
   upcomingTimes,
 } from '@/datetime';
+import useSavedParty from '@/hooks/useSavedParty';
 import CheckmarkIcon from '@/icons/CheckmarkIcon';
 import DropIcon from '@/icons/DropIcon';
 import LightningIcon from '@/icons/LightningIcon';
@@ -28,7 +29,6 @@ import kvdb from '@/kvdb';
 
 import RebookingHeader from '../../RebookingHeader';
 import { HomeTabProps } from '../Home';
-import { useSelectedParty } from '../PartySelector';
 import RefreshButton from '../RefreshButton';
 import BookingDateSelect from './BookingDateSelect';
 import LLButton from './LLButton';
@@ -40,7 +40,7 @@ import useSort, { Sorter } from './useSort';
 
 const LP_MIN_STANDBY = 30;
 const LP_MAX_LL_WAIT = 60;
-export const STARRED_KEY = ['bg1', 'genie', 'tipBoard', 'starred'];
+export const STARRED_KEY = 'bg1.genie.tipBoard.starred';
 const LIGHTNING_PICK = 'Lightning Pick';
 const UPCOMING_DROP = 'Upcoming Drop';
 const BOOKED = 'Booked';
@@ -53,18 +53,19 @@ export interface ExtFlexExp extends FlexExperience {
 
 const isExperienced = (exp: ExtFlexExp) => exp.experienced && !exp.starred;
 
-export default function MultiPassList({ contentRef }: HomeTabProps) {
-  useSelectedParty();
-  const { ll } = useClients();
-  const { park } = usePark();
-  const { experiences, refreshExperiences, loaderElem } = useExperiences();
-  const { bookingDate } = useBookingDate();
+export default function MultiPassList({ ref }: HomeTabProps) {
+  useSavedParty();
+  const { ll } = use(ClientsContext);
+  const { park } = use(ParkContext);
+  const { experiences, refreshExperiences, loaderElem } =
+    use(ExperiencesContext);
+  const { bookingDate } = use(BookingDateContext);
   const { sortType, sorter, SortSelect } = useSort();
   const firstUpdate = useRef(true);
 
   useEffect(() => {
-    if (!firstUpdate.current) contentRef.current?.scroll(0, 0);
-  }, [sortType, contentRef]);
+    if (!firstUpdate.current) ref.current?.scroll(0, 0);
+  }, [sortType, ref]);
 
   useEffect(() => {
     firstUpdate.current = false;
@@ -92,7 +93,7 @@ export default function MultiPassList({ contentRef }: HomeTabProps) {
           )}
         </>
       }
-      contentRef={contentRef}
+      ref={ref}
     >
       <Experiences experiences={experiences} park={park} sorter={sorter} />
       {loaderElem}
@@ -109,11 +110,11 @@ const Experiences = memo(function Experiences({
   park: Park;
   sorter: Sorter;
 }) {
-  const { goTo } = useNav();
-  const theme = useTheme();
-  const resort = useResort();
-  const { plans } = usePlans();
-  const { bookingDate } = useBookingDate();
+  const { goTo } = use(NavContext);
+  const theme = use(ThemeContext);
+  const resort = use(ResortContext);
+  const { plans } = use(PlansContext);
+  const { bookingDate } = use(BookingDateContext);
   const [starred, setStarred] = useState<Set<string>>(() => {
     const ids = kvdb.get<string[]>(STARRED_KEY) ?? [];
     return new Set(Array.isArray(ids) ? ids : []);
@@ -307,7 +308,7 @@ function InfoButton({
   onClick: () => void;
   className?: string;
 }) {
-  const theme = useTheme();
+  const theme = use(ThemeContext);
   return (
     <button
       title={`${name} (more info)`}
@@ -326,7 +327,7 @@ function StarButton({
   experience: ExtFlexExp;
   toggleStar: (exp: ExtFlexExp) => void;
 }) {
-  const theme = useTheme();
+  const theme = use(ThemeContext);
   return (
     <button
       title={`${experience.starred ? 'Remove from' : 'Add to'} Favorites`}
@@ -359,7 +360,7 @@ function DropTimeDesc({
   experience?: Experience;
   isBookingToday?: boolean;
 }) {
-  const resort = useResort();
+  const resort = use(ResortContext);
   const dropTime = upcomingTimes(experience?.dropTimes ?? [])[0];
   const parks = resort.parks
     .filter(p => p.dropTimes.length > 0)

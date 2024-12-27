@@ -1,11 +1,11 @@
-import { memo } from 'react';
+import { memo, use } from 'react';
 
 import { Booking } from '@/api/itinerary';
 import { Park } from '@/api/resort';
 import Tab from '@/components/Tab';
 import { Time } from '@/components/Time';
-import { usePlans } from '@/contexts/Plans';
-import { DEFAULT_THEME, useTheme } from '@/contexts/Theme';
+import PlansContext from '@/contexts/PlansContext';
+import ThemeContext, { DEFAULT_THEME } from '@/contexts/ThemeContext';
 import { parkDate } from '@/datetime';
 
 import { ScreenProps } from '../../Screen';
@@ -14,7 +14,7 @@ import NoPlans from '../NoPlans';
 import RefreshButton from './RefreshButton';
 
 export default function Plans(props: Partial<ScreenProps>) {
-  const { plans, refreshPlans, loaderElem } = usePlans();
+  const { plans, refreshPlans, loaderElem } = use(PlansContext);
 
   return (
     <Tab
@@ -30,7 +30,7 @@ export default function Plans(props: Partial<ScreenProps>) {
 }
 
 const PlansList = memo(function PlansList({ plans }: { plans: Booking[] }) {
-  const theme = useTheme();
+  const theme = use(ThemeContext);
 
   const plansByDate = new Map<string, Booking[]>();
   const parksByDate = new Map<string, Set<Park>>();

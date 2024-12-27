@@ -1,4 +1,6 @@
-import { useTheme } from '@/contexts/Theme';
+import { use } from 'react';
+
+import ThemeContext from '@/contexts/ThemeContext';
 import { DateTime, displayTime } from '@/datetime';
 
 export default function TimeBanner({
@@ -8,15 +10,12 @@ export default function TimeBanner({
   bookTime?: string;
   dropTime?: string;
 }) {
-  const theme = useTheme();
-
-  if (!bookTime && !dropTime) return null;
-  return (
-    <div className={`flex justify-center gap-x-10 ${theme.bg}`}>
+  return bookTime || dropTime ? (
+    <div className={`flex justify-center gap-x-10 ${use(ThemeContext).bg}`}>
       <LabeledTime label="Book" time={bookTime} />
       <LabeledTime label="Drop" time={dropTime} />
     </div>
-  );
+  ) : null;
 }
 
 function LabeledTime({ label, time }: { label?: string; time?: string }) {

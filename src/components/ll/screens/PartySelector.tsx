@@ -1,41 +1,20 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import { Guest } from '@/api/ll';
 import FloatingButton from '@/components/FloatingButton';
 import GuestList from '@/components/GuestList';
 import Screen from '@/components/Screen';
-import { useClients } from '@/contexts/Clients';
+import ClientsContext from '@/contexts/ClientsContext';
 import useDataLoader from '@/hooks/useDataLoader';
-import kvdb from '@/kvdb';
-
-export const PARTY_IDS_KEY = ['bg1', 'genie', 'partyIds'];
-
-export function loadPartyIds(): string[] {
-  const partyIds = kvdb.get(PARTY_IDS_KEY) ?? [];
-  return Array.isArray(partyIds) ? partyIds : [];
-}
-
-export function useSelectedParty() {
-  const { ll } = useClients();
-  useEffect(() => ll.setPartyIds(loadPartyIds()), [ll]);
-}
+import useSavedParty from '@/hooks/useSavedParty';
 
 export default function PartySelector() {
-  const { ll } = useClients();
+  const { ll } = use(ClientsContext);
   const { loadData, loaderElem } = useDataLoader();
-  const [auto, setAuto] = useState(true);
   const [guests, setGuests] = useState<Guest[]>();
-  const [partyIds, setPartyIds] = useState<Set<string>>(() => {
-    const partyIds = new Set(loadPartyIds());
-    setAuto(partyIds.size === 0);
-    return partyIds;
-  });
-
-  function save() {
-    const pids = [...partyIds];
-    kvdb.set<string[]>(PARTY_IDS_KEY, pids);
-    ll.setPartyIds(pids);
-  }
+  const [savedPartyIds, savePartyIds] = useSavedParty();
+  const [partyIds, setPartyIds] = useState(savedPartyIds);
+  const [auto, setAuto] = useState(partyIds.size === 0);
 
   useEffect(() => {
     loadData(async () => {
@@ -110,9 +89,7 @@ export default function PartySelector() {
                 selectable={{
                   isSelected: () => false,
                   onToggle: g => {
-                    const newPartyIds = new Set(partyIds);
-                    newPartyIds.add(g.id);
-                    setPartyIds(newPartyIds);
+                    setPartyIds(new Set(partyIds).add(g.id));
                   },
                 }}
               />
@@ -124,7 +101,7 @@ export default function PartySelector() {
       <FloatingButton
         back
         disabled={!auto && partyIds.size === 0}
-        onClick={save}
+        onClick={() => savePartyIds(partyIds)}
       >
         Save
       </FloatingButton>

@@ -1,4 +1,4 @@
-import prefresh from '@prefresh/vite';
+import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
@@ -17,8 +17,6 @@ export default defineConfig({
   root: 'src',
   resolve: {
     alias: {
-      react: 'preact/compat',
-      'react-dom': 'preact/compat',
       '@/': path.join(__dirname, 'src') + '/',
     },
   },
@@ -34,14 +32,13 @@ export default defineConfig({
       },
     },
   },
-  optimizeDeps: { include: ['preact', 'preact/hooks', 'preact/compat'] },
   esbuild: {
     charset: 'ascii',
-    jsxInject: `import * as React from 'react'`,
   },
   server,
   preview: server,
   plugins: [
+    react(),
     obfuscatorPlugin({
       include: ['src/api/diu/*'],
       apply: 'build',
@@ -52,6 +49,5 @@ export default defineConfig({
         stringArrayEncoding: ['base64'],
       },
     }),
-    +(process.env.HMR ?? 0) ? prefresh() : null,
   ],
 });

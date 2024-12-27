@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
+import { use, useRef, useState } from 'react';
 
 import { authStore } from '@/api/auth';
 import Overlay from '@/components/Overlay';
+import NavContext from '@/contexts/NavContext';
 // import News from '@/components/screens/News';
-import { useNav } from '@/contexts/Nav';
+
 import ExitIcon from '@/icons/ExitIcon';
 // import NewsIcon from '@/icons/NewsIcon';
 import SettingsIcon from '@/icons/SettingsIcon';
@@ -12,7 +13,7 @@ import UserIcon from '@/icons/UserIcon';
 import PartySelector from '../PartySelector';
 
 export default function SettingsButton() {
-  const { goTo } = useNav();
+  const { goTo } = use(NavContext);
   const [options] = useState([
     {
       text: 'Party Selection',

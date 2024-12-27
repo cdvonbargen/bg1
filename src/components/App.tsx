@@ -5,8 +5,8 @@ import { InvalidOrigin } from '@/api/client';
 import { LLClient } from '@/api/ll';
 import { Resort, loadResort } from '@/api/resort';
 import { VQClient } from '@/api/vq';
-import { ClientsProvider, createClients } from '@/contexts/Clients';
-import { ResortProvider } from '@/contexts/Resort';
+import ClientsContext, { createClients } from '@/contexts/ClientsContext';
+import ResortContext from '@/contexts/ResortContext';
 import { DateTime } from '@/datetime';
 import useDisclaimer from '@/hooks/useDisclaimer';
 import useNews from '@/hooks/useNews';
@@ -55,11 +55,11 @@ export default function App() {
             }[resort.id]
           );
           setContent(
-            <ResortProvider value={resort}>
-              <ClientsProvider value={createClients(resort)}>
+            <ResortContext value={resort}>
+              <ClientsContext value={createClients(resort)}>
                 <Component />
-              </ClientsProvider>
-            </ResortProvider>
+              </ClientsContext>
+            </ResortContext>
           );
           return;
         } catch (error) {

@@ -1,16 +1,16 @@
-import { useMemo } from 'react';
+import { use, useMemo } from 'react';
 
 import Select from '@/components/Select';
-import { useClients } from '@/contexts/Clients';
-import { usePark } from '@/contexts/Park';
-import { useRebooking } from '@/contexts/Rebooking';
-import { useResort } from '@/contexts/Resort';
+import ClientsContext from '@/contexts/ClientsContext';
+import ParkContext from '@/contexts/ParkContext';
+import RebookingContext from '@/contexts/RebookingContext';
+import ResortContext from '@/contexts/ResortContext';
 
 export default function ParkSelect(props: { className?: string }) {
-  const { parks } = useResort();
-  const { ll } = useClients();
-  const { park, setPark } = usePark();
-  const rebooking = useRebooking();
+  const { parks } = use(ResortContext);
+  const { ll } = use(ClientsContext);
+  const { park, setPark } = use(ParkContext);
+  const rebooking = use(RebookingContext);
 
   const parkOptions = useMemo(
     () =>

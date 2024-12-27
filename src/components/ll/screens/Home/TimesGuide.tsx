@@ -1,13 +1,13 @@
-import { memo } from 'react';
+import { memo, use } from 'react';
 
 import { Experience } from '@/api/ll';
 import { Land } from '@/api/resort';
 import Button from '@/components/Button';
 import Screen from '@/components/Screen';
 import Tab from '@/components/Tab';
-import { useDasParties } from '@/contexts/DasParties';
-import { useExperiences } from '@/contexts/Experiences';
-import { useNav } from '@/contexts/Nav';
+import DasPartiesContext from '@/contexts/DasPartiesContext';
+import ExperiencesContext from '@/contexts/ExperiencesContext';
+import NavContext from '@/contexts/NavContext';
 import { displayTime } from '@/datetime';
 
 import DasPartyList from '../DasPartyList';
@@ -16,10 +16,11 @@ import RefreshButton from '../RefreshButton';
 import Legend, { Symbol } from './Legend';
 import ParkSelect from './ParkSelect';
 
-export default function TimesGuide({ contentRef }: HomeTabProps) {
-  const { goTo } = useNav();
-  const { experiences, refreshExperiences, loaderElem } = useExperiences();
-  const parties = useDasParties();
+export default function TimesGuide({ ref }: HomeTabProps) {
+  const { goTo } = use(NavContext);
+  const { experiences, refreshExperiences, loaderElem } =
+    use(ExperiencesContext);
+  const parties = use(DasPartiesContext);
 
   return (
     <Tab
@@ -38,7 +39,7 @@ export default function TimesGuide({ contentRef }: HomeTabProps) {
           <RefreshButton name="Times" onClick={refreshExperiences} />
         </>
       }
-      contentRef={contentRef}
+      ref={ref}
     >
       <Experiences experiences={experiences} />
       {loaderElem}
@@ -51,7 +52,7 @@ const Experiences = memo(function Experiences({
 }: {
   experiences: Experience[];
 }) {
-  const { goTo } = useNav();
+  const { goTo } = use(NavContext);
   const showExpInfo = (exp: Experience) => goTo(<ExperienceInfo exp={exp} />);
 
   const expsByLand = new Map<Land, Record<Experience['type'], Experience[]>>();

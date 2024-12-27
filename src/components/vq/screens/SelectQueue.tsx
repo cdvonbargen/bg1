@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect, useState } from 'react';
 
 import { authStore } from '@/api/auth';
 import { Queue } from '@/api/vq';
 import Button from '@/components/Button';
 import Screen from '@/components/Screen';
 import RefreshButton from '@/components/ll/screens/RefreshButton';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
-import { useTheme } from '@/contexts/Theme';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
+import ThemeContext from '@/contexts/ThemeContext';
 import { displayTime } from '@/datetime';
 import useDataLoader from '@/hooks/useDataLoader';
 import onVisible from '@/onVisible';
@@ -19,9 +19,9 @@ const isActive = (queue: Queue) =>
   queue.isAcceptingPartyCreation || queue.isAcceptingJoins;
 
 export default function SelectQueue() {
-  const { vq } = useClients();
-  const { goTo } = useNav();
-  const theme = useTheme();
+  const { vq } = use(ClientsContext);
+  const { goTo } = use(NavContext);
+  const theme = use(ThemeContext);
   const { loadData, loaderElem } = useDataLoader();
   const [queues, setQueues] = useState<Queue[]>();
 

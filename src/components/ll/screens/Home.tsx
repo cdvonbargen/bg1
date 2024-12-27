@@ -1,12 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { use, useEffect, useRef } from 'react';
 
-import { withTabs } from '@/components/Tab';
-import { useExperiences } from '@/contexts/Experiences';
-import { useScreenState } from '@/contexts/Nav';
-import { usePark } from '@/contexts/Park';
-import { usePlans } from '@/contexts/Plans';
-import { useRebooking } from '@/contexts/Rebooking';
-import { ThemeProvider } from '@/contexts/Theme';
+import withTabs from '@/components/withTabs';
+import ExperiencesContext from '@/contexts/ExperiencesContext';
+import ParkContext from '@/contexts/ParkContext';
+import PlansContext from '@/contexts/PlansContext';
+import RebookingContext from '@/contexts/RebookingContext';
+import ThemeContext from '@/contexts/ThemeContext';
+import useScreenState from '@/hooks/useScreenState';
 import CalendarIcon from '@/icons/CalendarIcon';
 import ClockIcon from '@/icons/ClockIcon';
 import LightningIcon from '@/icons/LightningIcon';
@@ -19,27 +19,25 @@ import TimesGuide from './Home/TimesGuide';
 import Plans from './Plans';
 
 const AUTO_REFRESH_MIN_MS = 60_000;
-export const TAB_KEY = ['bg1', 'tab'];
-
-export const getDefaultTab = () => kvdb.get<string>(TAB_KEY) ?? 'LL';
+export const HOME_TAB_KEY = 'bg1.tab';
 
 export interface HomeTabProps {
-  contentRef: React.MutableRefObject<HTMLDivElement | null>;
+  ref: React.RefObject<HTMLDivElement | null>;
 }
 
 const tabs = [
   {
-    name: 'LL',
+    name: 'LL' as const,
     icon: <LightningIcon />,
     component: MultiPassList,
   },
   {
-    name: 'Times',
+    name: 'Times' as const,
     icon: <ClockIcon />,
     component: TimesGuide,
   },
   {
-    name: 'Plans',
+    name: 'Plans' as const,
     icon: <CalendarIcon />,
     component: Plans,
   },
@@ -47,35 +45,45 @@ const tabs = [
 
 const footer = <SettingsButton />;
 
-const Home = withTabs({ tabs, footer }, ({ tab }) => {
-  const { isActiveScreen } = useScreenState();
-  const rebooking = useRebooking();
-  const { park } = usePark();
-  const { refreshExperiences } = useExperiences();
-  const { refreshPlans } = usePlans();
-  const contentRef = useRef<HTMLDivElement | null>(null);
+const Home = Object.assign(
+  withTabs({ tabs, footer }, ({ tab }) => {
+    const { isActiveScreen } = useScreenState();
+    const rebooking = use(RebookingContext);
+    const { park } = use(ParkContext);
+    const { refreshExperiences } = use(ExperiencesContext);
+    const { refreshPlans } = use(PlansContext);
+    const ref = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    kvdb.set<string>(TAB_KEY, tab.name);
-  }, [tab]);
+    useEffect(() => {
+      kvdb.set<string>(HOME_TAB_KEY, tab.name);
+    }, [tab]);
 
-  useEffect(() => {
-    return onVisible(() => {
-      if (!isActiveScreen) return;
-      refreshExperiences(AUTO_REFRESH_MIN_MS);
-      refreshPlans(AUTO_REFRESH_MIN_MS);
-    });
-  }, [isActiveScreen, refreshExperiences, refreshPlans]);
+    useEffect(() => {
+      return onVisible(() => {
+        if (!isActiveScreen) return;
+        refreshExperiences(AUTO_REFRESH_MIN_MS);
+        refreshPlans(AUTO_REFRESH_MIN_MS);
+      });
+    }, [isActiveScreen, refreshExperiences, refreshPlans]);
 
-  useEffect(() => {
-    if (rebooking.current) contentRef.current?.scroll(0, 0);
-  }, [rebooking]);
+    useEffect(() => {
+      if (rebooking.current) ref.current?.scroll(0, 0);
+    }, [rebooking]);
 
-  return (
-    <ThemeProvider value={park.theme}>
-      <tab.component contentRef={contentRef} />
-    </ThemeProvider>
-  );
-});
+    return (
+      <ThemeContext value={park.theme}>
+        <tab.component ref={ref} />
+      </ThemeContext>
+    );
+  }),
+  {
+    getSavedTabName() {
+      const tabName = kvdb.get(HOME_TAB_KEY);
+      return tabs.find(t => t.name === tabName)
+        ? (tabName as (typeof tabs)[0]['name'])
+        : 'LL';
+    },
+  }
+);
 
 export default Home;

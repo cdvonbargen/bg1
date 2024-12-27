@@ -1,21 +1,21 @@
-import { useLayoutEffect } from 'react';
+import { use, useLayoutEffect } from 'react';
 
 import { DasParty } from '@/api/das';
 import { isType } from '@/api/itinerary';
 import Button from '@/components/Button';
 import Screen from '@/components/Screen';
 import { Time } from '@/components/Time';
-import { useNav } from '@/contexts/Nav';
-import { usePark } from '@/contexts/Park';
-import { usePlans } from '@/contexts/Plans';
+import NavContext from '@/contexts/NavContext';
+import ParkContext from '@/contexts/ParkContext';
+import PlansContext from '@/contexts/PlansContext';
 
 import BookingDetails from './BookingDetails';
 import DasSelection from './DasSelection';
 
 export default function DasPartyList({ parties }: { parties: DasParty[] }) {
-  const { goTo } = useNav();
-  const { park } = usePark();
-  const { plans, refreshPlans, loaderElem } = usePlans();
+  const { goTo } = use(NavContext);
+  const { park } = use(ParkContext);
+  const { plans, refreshPlans, loaderElem } = use(PlansContext);
 
   useLayoutEffect(refreshPlans, [refreshPlans]);
 

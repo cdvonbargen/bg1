@@ -1,10 +1,12 @@
+import { use } from 'react';
+
 import { Guest, Queue } from '@/api/vq';
 import FloatingButton from '@/components/FloatingButton';
 import GuestList from '@/components/GuestList';
 import TimeBoard from '@/components/TimeBoard';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
-import { useResort } from '@/contexts/Resort';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
+import ResortContext from '@/contexts/ResortContext';
 import useDataLoader from '@/hooks/useDataLoader';
 import { ping } from '@/ping';
 
@@ -18,9 +20,9 @@ export default function JoinQueue({
   queue: Queue;
   guests: Guest[];
 }) {
-  const { goTo } = useNav();
-  const resort = useResort();
-  const { vq } = useClients();
+  const { goTo } = use(NavContext);
+  const resort = use(ResortContext);
+  const { vq } = use(ClientsContext);
   const { loadData, loaderElem } = useDataLoader();
 
   async function joinQueue() {

@@ -1,18 +1,20 @@
+import { use } from 'react';
+
 import Button from '@/components/Button';
 import GuestList from '@/components/GuestList';
 import Warning from '@/components/Warning';
-import { useClients } from '@/contexts/Clients';
-import { useNav } from '@/contexts/Nav';
-import { useParty } from '@/contexts/Party';
+import ClientsContext from '@/contexts/ClientsContext';
+import NavContext from '@/contexts/NavContext';
+import PartyContext from '@/contexts/PartyContext';
 
 import IneligibleGuestList from '../../IneligibleGuestList';
 import ModifyParty from '../ModifyParty';
 
 export default function PartyList() {
-  const { goTo } = useNav();
-  const party = useParty();
+  const { goTo } = use(NavContext);
+  const party = use(PartyContext);
   const { eligible, selected } = party;
-  const { maxPartySize } = useClients().ll.rules;
+  const { maxPartySize } = use(ClientsContext).ll.rules;
   return (
     <>
       {eligible.length > maxPartySize && selected.length === maxPartySize && (

@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { use, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-import { useTheme } from '@/contexts/Theme';
+import ThemeContext from '@/contexts/ThemeContext';
 import Icon from '@/icons/Icon';
 
 import Button from './Button';
@@ -37,7 +37,7 @@ export default function MenuButton<K, V>(props: MenuButtonProps<K, V>) {
     menuType: Menu,
     ...buttonProps
   } = props;
-  const { bg } = useTheme();
+  const { bg } = use(ThemeContext);
   const [showingList, showList] = useState(false);
   const [minTextWidth, setMinTextWidth] = useState(0);
   const btnTextRef = useRef<HTMLSpanElement>(null);

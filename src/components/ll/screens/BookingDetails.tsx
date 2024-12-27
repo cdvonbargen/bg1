@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 
 import { Booking } from '@/api/itinerary';
 import { Park } from '@/api/resort';
@@ -8,11 +8,11 @@ import GuestList from '@/components/GuestList';
 import Notice from '@/components/Notice';
 import Screen from '@/components/Screen';
 import { Time } from '@/components/Time';
-import { useClients } from '@/contexts/Clients';
-import { useDasParties } from '@/contexts/DasParties';
-import { useNav } from '@/contexts/Nav';
-import { useResort } from '@/contexts/Resort';
-import { DEFAULT_THEME } from '@/contexts/Theme';
+import ClientsContext from '@/contexts/ClientsContext';
+import DasPartiesContext from '@/contexts/DasPartiesContext';
+import NavContext from '@/contexts/NavContext';
+import ResortContext from '@/contexts/ResortContext';
+import { DEFAULT_THEME } from '@/contexts/ThemeContext';
 import { parkDate } from '@/datetime';
 
 import { ExperienceList } from '../ExperienceList';
@@ -31,10 +31,10 @@ export default function BookingDetails({
   isNew?: boolean;
   unmodifiable?: boolean;
 }) {
-  const { goTo, goBack } = useNav();
-  const { parks } = useResort();
-  const { ll } = useClients();
-  const dasParties = useDasParties();
+  const { goTo, goBack } = use(NavContext);
+  const { parks } = use(ResortContext);
+  const { ll } = use(ClientsContext);
+  const dasParties = use(DasPartiesContext);
   const { name, park, choices, type, subtype, start } = booking;
   const dasGuest =
     type === 'DAS' && subtype === 'IN_PARK'

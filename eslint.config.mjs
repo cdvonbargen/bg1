@@ -8,6 +8,7 @@ import jestDom from 'eslint-plugin-jest-dom';
 import prettier from 'eslint-plugin-prettier';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
 import testingLibrary from 'eslint-plugin-testing-library';
 import globals from 'globals';
 import path from 'node:path';
@@ -43,6 +44,7 @@ export default [
     plugins: {
       react: fixupPluginRules(react),
       'react-hooks': fixupPluginRules(reactHooks),
+      'react-refresh': fixupPluginRules(reactRefresh),
       'testing-library': fixupPluginRules(testingLibrary),
       jest: fixupPluginRules(jest),
       'jest-dom': fixupPluginRules(jestDom),
@@ -87,6 +89,10 @@ export default [
         {
           forbid: ['>', '"', '}'],
         },
+      ],
+      'react-refresh/only-export-components': [
+        'error',
+        { allowConstantExport: true },
       ],
       'testing-library/no-node-access': 'off',
       'prettier/prettier': 'error',

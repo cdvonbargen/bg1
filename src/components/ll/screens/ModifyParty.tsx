@@ -1,17 +1,17 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 
 import FloatingButton from '@/components/FloatingButton';
 import GuestList, { Guest } from '@/components/GuestList';
 import Screen from '@/components/Screen';
-import { useClients } from '@/contexts/Clients';
-import { Party, PartyProvider } from '@/contexts/Party';
+import ClientsContext from '@/contexts/ClientsContext';
+import PartyContext, { Party } from '@/contexts/PartyContext';
 
 import IneligibleGuestList from '../IneligibleGuestList';
 
 export default function ModifyParty({ party }: { party: Party }) {
   const { eligible, ineligible, selected, experience } = party;
   const [newParty, setNewParty] = useState<Set<Guest>>(new Set(selected));
-  const { maxPartySize } = useClients().ll.rules;
+  const { maxPartySize } = use(ClientsContext).ll.rules;
 
   function toggleGuest(guest: Guest) {
     newParty[newParty.has(guest) ? 'delete' : 'add'](guest);
@@ -19,7 +19,7 @@ export default function ModifyParty({ party }: { party: Party }) {
   }
 
   return (
-    <PartyProvider value={party}>
+    <PartyContext value={party}>
       <Screen title="Modify Party" theme={experience.park.theme}>
         <h2>{experience.name}</h2>
         <div>{experience.park.name}</div>
@@ -48,6 +48,6 @@ export default function ModifyParty({ party }: { party: Party }) {
           Confirm Party
         </FloatingButton>
       </Screen>
-    </PartyProvider>
+    </PartyContext>
   );
 }
