@@ -4,12 +4,12 @@ import { authStore } from '@/api/auth';
 import { Queue } from '@/api/vq';
 import Button from '@/components/Button';
 import Screen from '@/components/Screen';
+import RefreshButton from '@/components/ll/screens/RefreshButton';
 import { useClients } from '@/contexts/Clients';
 import { useNav } from '@/contexts/Nav';
 import { useTheme } from '@/contexts/Theme';
 import { displayTime } from '@/datetime';
 import useDataLoader from '@/hooks/useDataLoader';
-import RefreshIcon from '@/icons/RefreshIcon';
 import onVisible from '@/onVisible';
 
 import ChooseParty from './ChooseParty';
@@ -44,11 +44,7 @@ export default function SelectQueue() {
   return (
     <Screen
       title="Virtual Queues"
-      buttons={
-        <Button title="Refresh Queues" onClick={refreshQueues}>
-          <RefreshIcon />
-        </Button>
-      }
+      buttons={<RefreshButton name="Queues" onClick={refreshQueues} />}
       footer={
         <div className="p-2 text-right">
           <Button
