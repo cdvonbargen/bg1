@@ -177,10 +177,7 @@ function ExperienceList({
                 <div className="flex items-center gap-x-2">
                   <div
                     className={`flex-1 ${
-                      (exp.avgWait ?? 0) >= exp.park.waitThreshold ||
-                      (exp.virtualQueue && exp.standby?.waitTime)
-                        ? `font-bold ${land.theme.text}`
-                        : ''
+                      exp.highlight ? `font-bold ${land.theme.text}` : ''
                     }`}
                   >
                     {exp.name}

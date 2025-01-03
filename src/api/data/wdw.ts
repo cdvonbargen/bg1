@@ -11,7 +11,6 @@ const mk = {
     w: -81.586,
   },
   theme: { bg: 'bg-fuchsia-600', text: 'text-fuchsia-600' },
-  waitThreshold: 22,
 };
 const ep = {
   id: '80007838',
@@ -24,7 +23,6 @@ const ep = {
     w: -81.555,
   },
   theme: { bg: 'bg-indigo-600', text: 'text-indigo-600' },
-  waitThreshold: 25,
 };
 const hs = {
   id: '80007998',
@@ -37,7 +35,6 @@ const hs = {
     w: -81.564,
   },
   theme: { bg: 'bg-orange-600', text: 'text-orange-600' },
-  waitThreshold: 35,
 };
 const ak = {
   id: '80007823',
@@ -50,7 +47,6 @@ const ak = {
     w: -81.597,
   },
   theme: { bg: 'bg-green-600', text: 'text-green-600' },
-  waitThreshold: 18,
 };
 
 export const parks: ResortData['parks'] = [mk, ep, hs, ak];
@@ -208,6 +204,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 2.3,
     avgWait: 40,
+    highlight: true,
     dropTimes: ['08:47', '13:47'],
   },
   80010114: {
@@ -216,6 +213,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.418446, -81.5796479],
     priority: 3.0,
     avgWait: 34,
+    highlight: true,
   },
   80010232: {
     name: 'Carousel of Progress',
@@ -284,6 +282,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.4208771, -81.5830102],
     priority: 1.3,
     avgWait: 41,
+    highlight: true,
   },
   80010149: {
     name: "it's a small world",
@@ -298,6 +297,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 1.1,
     avgWait: 53,
+    highlight: true,
   },
   80010153: {
     name: 'Jungle Cruise',
@@ -306,6 +306,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 1.1,
     avgWait: 53,
+    highlight: true,
   },
   8336: {
     name: 'Let the Magic Begin',
@@ -337,6 +338,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.4202297, -81.5801966],
     priority: 2.0,
     avgWait: 35,
+    highlight: true,
   },
   16874126: {
     name: "Ariel (Ariel's Grotto)",
@@ -420,6 +422,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 1.2,
     avgWait: 53,
+    highlight: true,
   },
   80010177: {
     name: 'Pirates of the Caribbean',
@@ -427,6 +430,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.4180994, -81.5842719],
     priority: 2.2,
     avgWait: 28,
+    highlight: true,
   },
   80010117: {
     name: 'Prince Charming Regal Carrousel',
@@ -442,6 +446,7 @@ export const experiences: ResortData['experiences'] = {
     land: fantasyland,
     geo: [28.4204112, -81.5805506],
     avgWait: 63,
+    highlight: true,
   },
   80010190: {
     name: 'Space Mountain',
@@ -450,6 +455,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 3.1,
     avgWait: 46,
+    highlight: true,
   },
   80010196: {
     name: 'Swiss Family Treehouse',
@@ -461,6 +467,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.419418, -81.58498],
     tier: 1,
     priority: 1.0,
+    highlight: true,
     dropTimes: [
       '09:47',
       '10:47',
@@ -492,6 +499,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.4202075, -81.577053],
     priority: 1.0,
     avgWait: 115,
+    highlight: true,
   },
   16767263: {
     name: 'Under the Sea',
@@ -583,6 +591,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 1.1,
     avgWait: 63,
+    highlight: true,
   },
   19242311: {
     name: 'Germany Gazebo Entertainment',
@@ -600,6 +609,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Guardians of the Galaxy: Cosmic Rewind',
     land: discovery,
     geo: [28.3747479, -81.5478405],
+    highlight: true,
     priority: 1.0,
   },
   17186496: {
@@ -735,6 +745,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 1.0,
     avgWait: 67,
+    highlight: true,
     dropTimes: ['13:47'],
   },
   17490262: {
@@ -762,12 +773,14 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.3735924, -81.5522783],
     tier: 1,
     avgWait: 48,
+    highlight: true,
   },
   412001587: {
     name: "Soarin' Over California",
     land: nature,
     geo: [28.3735924, -81.5522783],
     avgWait: 35,
+    highlight: true,
   },
   80010191: {
     name: 'Spaceship Earth',
@@ -891,6 +904,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 2.0,
     avgWait: 55,
+    highlight: true,
   },
   19263735: {
     name: 'Millennium Falcon: Smugglers Run',
@@ -899,6 +913,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 3.1,
     avgWait: 49,
+    highlight: true,
     dropTimes: ['10:47', '15:47'],
   },
   80010151: {
@@ -914,6 +929,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 2.1,
     avgWait: 62,
+    highlight: true,
   },
   18904138: {
     name: 'Slinky Dog Dash',
@@ -922,6 +938,7 @@ export const experiences: ResortData['experiences'] = {
     tier: 1,
     priority: 1.0,
     avgWait: 79,
+    highlight: true,
     dropTimes: ['13:17', '15:47'],
   },
   80010193: {
@@ -935,6 +952,7 @@ export const experiences: ResortData['experiences'] = {
     land: starWars,
     geo: [28.3548829, -81.5604682],
     avgWait: 78,
+    highlight: true,
   },
   209857: {
     name: 'Toy Story Mania',
@@ -942,6 +960,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.3563865, -81.5619019],
     priority: 1.1,
     avgWait: 51,
+    highlight: true,
     dropTimes: ['13:17', '15:47'],
   },
   80010218: {
@@ -950,6 +969,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.3595812, -81.5597695],
     priority: 1.2,
     avgWait: 52,
+    highlight: true,
     dropTimes: ['13:17', '15:47'],
   },
   19260580: {
@@ -967,6 +987,7 @@ export const experiences: ResortData['experiences'] = {
     land: pandora,
     geo: [28.3555698, -81.592292],
     avgWait: 86,
+    highlight: true,
   },
   19581371: {
     name: 'Discovery Island Drummers Flotilla',
@@ -977,12 +998,14 @@ export const experiences: ResortData['experiences'] = {
     land: dinoland,
     geo: [28.3552805, -81.5884492],
     avgWait: 29,
+    highlight: true,
   },
   26068: {
     name: 'Expedition Everest',
     land: asia,
     geo: [28.3584979, -81.587395],
     avgWait: 38,
+    highlight: true,
     dropTimes: ['08:47', '12:47'],
   },
   19581372: {
@@ -1026,6 +1049,7 @@ export const experiences: ResortData['experiences'] = {
     land: africa,
     geo: [28.3592779, -81.5921478],
     avgWait: 53,
+    highlight: true,
     dropTimes: ['08:47', '12:47'],
   },
   18435910: {
@@ -1053,6 +1077,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [28.3551663, -81.591708],
     priority: 1.0,
     avgWait: 58,
+    highlight: true,
   },
   72877: {
     name: 'Tam Tam Drummers of Harambe',

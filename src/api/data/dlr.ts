@@ -11,7 +11,6 @@ const dl = {
     w: -117.9243814,
   },
   theme: { bg: 'bg-pink-600', text: 'text-pink-600' },
-  waitThreshold: 30,
 };
 const ca = {
   id: '336894',
@@ -24,7 +23,6 @@ const ca = {
     w: -117.9243814,
   },
   theme: { bg: 'bg-yellow-600', text: 'text-yellow-600' },
-  waitThreshold: 30,
 };
 
 export const parks: ResortData['parks'] = [dl, ca];
@@ -141,7 +139,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Alice in Wonderland',
     land: fantasyland,
     priority: 3,
-    avgWait: 31,
+    highlight: true,
   },
   353291: {
     name: 'Astro Orbitor',
@@ -151,7 +149,6 @@ export const experiences: ResortData['experiences'] = {
     name: 'Autopia',
     land: tomorrowland,
     geo: [33.8126634, -117.9167994],
-    avgWait: 21,
   },
   424945: {
     name: 'Believe… in Holiday Magic Fireworks',
@@ -162,13 +159,13 @@ export const experiences: ResortData['experiences'] = {
     land: frontierland,
     geo: [33.8124801, -117.9205132],
     priority: 3.0,
-    avgWait: 36,
+    highlight: true,
   },
   353301: {
     name: 'Buzz Lightyear Astro Blasters',
     land: tomorrowland,
     geo: [33.8122751, -117.9181819],
-    avgWait: 26,
+    highlight: true,
   },
   353305: {
     name: 'Casey Jr. Circus Train',
@@ -209,7 +206,6 @@ export const experiences: ResortData['experiences'] = {
   353327: {
     name: 'Finding Nemo Submarine Voyage',
     land: tomorrowland,
-    avgWait: 28,
   },
   19348571: {
     name: 'Halloween Screams (Fireworks)',
@@ -224,19 +220,21 @@ export const experiences: ResortData['experiences'] = {
     land: newOrleans,
     geo: [33.811616, -117.9218924],
     priority: 3.0,
+    highlight: true,
   },
   18249927: {
     name: 'Haunted Mansion Holiday',
     land: newOrleans,
     geo: [33.811616, -117.9218924],
     priority: 2.0,
+    highlight: true,
   },
   353355: {
     name: 'Indiana Jones Adventure',
     land: adventureland,
     geo: [33.8114097, -117.9204077],
     priority: 1.1,
-    avgWait: 50,
+    highlight: true,
   },
   367492: {
     name: "it's a small world",
@@ -247,6 +245,7 @@ export const experiences: ResortData['experiences'] = {
     name: "it's a small world Holiday",
     land: fantasyland,
     geo: [33.8144167, -117.9181268],
+    highlight: true,
   },
   18847498: {
     name: "it's a small world Holiday Lighting",
@@ -255,7 +254,7 @@ export const experiences: ResortData['experiences'] = {
   353363: {
     name: 'Jungle Cruise',
     land: adventureland,
-    avgWait: 31,
+    highlight: true,
   },
   353365: {
     name: 'King Arthur Carrousel',
@@ -278,7 +277,7 @@ export const experiences: ResortData['experiences'] = {
     land: fantasyland,
     geo: [33.8127838, -117.9182386],
     priority: 3.0,
-    avgWait: 46,
+    highlight: true,
   },
   18738682: {
     name: 'Disney Princesses (Royal Hall)',
@@ -296,17 +295,17 @@ export const experiences: ResortData['experiences'] = {
     type: 'CHARACTER',
   },
   411821333: {
-    name: "Mickey and Minnie's Runaway Railway",
+    name: "Mickey & Minnie's Runaway Railway",
     land: toontown,
     geo: [33.8154852, -117.9183938],
     priority: 2.1,
-    avgWait: 34,
+    highlight: true,
   },
   19193459: {
     name: 'Millennium Falcon: Smugglers Run',
     land: starWars,
     geo: [33.8153228, -117.922197],
-    avgWait: 30,
+    highlight: true,
   },
   353389: {
     name: "Mr. Toad's Wild Ride",
@@ -316,7 +315,7 @@ export const experiences: ResortData['experiences'] = {
     name: "Peter Pan's Flight",
     land: fantasyland,
     priority: 3,
-    avgWait: 36,
+    highlight: true,
   },
   353401: {
     name: "Pinocchio's Daring Journey",
@@ -331,7 +330,7 @@ export const experiences: ResortData['experiences'] = {
     land: newOrleans,
     geo: [33.811295, -117.9209785],
     priority: 3,
-    avgWait: 31,
+    highlight: true,
   },
   411973631: {
     name: 'Queenie & the Jambalaya Jazz Band',
@@ -341,14 +340,14 @@ export const experiences: ResortData['experiences'] = {
     name: 'Rise of the Resistance',
     land: starWars,
     geo: [33.8135671, -117.9236346],
-    avgWait: 62,
+    highlight: true,
   },
   353421: {
     name: "Roger Rabbit's Car Toon Spin",
     land: toontown,
     geo: [33.8155682, -117.9181205],
     priority: 3.1,
-    avgWait: 46,
+    highlight: true,
   },
   353429: {
     name: "Snow White's Enchanted Wish",
@@ -359,19 +358,19 @@ export const experiences: ResortData['experiences'] = {
     land: tomorrowland,
     geo: [33.8112647, -117.9175892],
     priority: 2.0,
-    avgWait: 50,
+    highlight: true,
   },
   18237368: {
     name: 'Hyperspace Mountain',
     land: tomorrowland,
     geo: [33.8112647, -117.9175892],
     priority: 1.2,
+    highlight: true,
   },
   353439: {
     name: 'Star Tours',
     land: tomorrowland,
     geo: [33.8119436, -117.9182118],
-    avgWait: 24,
   },
   353443: {
     name: 'Storybook Land Canal Boats',
@@ -389,7 +388,7 @@ export const experiences: ResortData['experiences'] = {
     name: "Tiana's Bayou Adventure",
     land: bayou,
     priority: 1.0,
-    avgWait: 60,
+    highlight: true,
   },
   412109781: {
     name: 'Together Forever - Pixar Nighttime Spectacular (Fireworks)',
@@ -445,27 +444,26 @@ export const experiences: ResortData['experiences'] = {
     land: paradise,
     geo: [33.8062523, -117.9228425],
     priority: 3.1,
-    avgWait: 35,
+    highlight: true,
   },
   353345: {
     name: 'Grizzly River Run',
     land: grizzly,
     geo: [33.8069638, -117.9212689],
-    avgWait: 26,
   },
   353451: {
     name: 'Guardians of the Galaxy - Mission: BREAKOUT',
     land: avengers,
     geo: [33.8068606, -117.9172434],
     priority: 1.1,
-    avgWait: 45,
+    highlight: true,
   },
   18774860: {
     name: 'Guardians of the Galaxy - Monsters After Dark',
     land: avengers,
     geo: [33.8068606, -117.9172434],
     priority: 1.1,
-    avgWait: 60,
+    highlight: true,
   },
   18614009: {
     name: 'Hurry Home - Lunar New Year Celebration',
@@ -476,7 +474,7 @@ export const experiences: ResortData['experiences'] = {
     land: pixar,
     geo: [33.8046948, -117.9207725],
     priority: 3.3,
-    avgWait: 33,
+    highlight: true,
   },
   19285637: {
     name: 'Inside Out Emotional Whirlwind',
@@ -542,7 +540,7 @@ export const experiences: ResortData['experiences'] = {
     land: hollywood,
     geo: [33.8081471, -117.9175137],
     priority: 3.2,
-    avgWait: 38,
+    highlight: true,
   },
   353379: {
     name: 'Pixar Pal-A-Round - Swinging',
@@ -552,7 +550,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Radiator Springs Racers',
     land: cars,
     geo: [33.8052475, -117.9198715],
-    avgWait: 71,
+    highlight: true,
   },
   353413: {
     name: 'Redwood Creek Challenge Trail',
@@ -567,20 +565,21 @@ export const experiences: ResortData['experiences'] = {
     land: grizzly,
     geo: [33.8085516, -117.9204917],
     priority: 3.0,
-    avgWait: 38,
+    highlight: true,
   },
   19324604: {
     name: "Soarin' Over California",
     land: grizzly,
     geo: [33.8085516, -117.9204917],
     priority: 2.2,
+    highlight: true,
   },
   353453: {
     name: 'Toy Story Midway Mania',
     land: pixar,
     geo: [33.804614, -117.9216383],
     priority: 1.0,
-    avgWait: 45,
+    highlight: true,
   },
   353457: {
     name: 'Turtle Talk with Crush',
@@ -592,7 +591,7 @@ export const experiences: ResortData['experiences'] = {
     land: avengers,
     geo: [33.8067598, -117.91849],
     priority: 2.0,
-    avgWait: 40,
+    highlight: true,
   },
   411805943: {
     name: 'Wondrous Journeys (Fireworks)',

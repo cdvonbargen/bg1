@@ -5,7 +5,6 @@ export interface Park {
   geo: { n: number; s: number; e: number; w: number };
   theme: { bg: string; text: string };
   dropTimes: string[];
-  waitThreshold: number;
 }
 
 export interface Land {
@@ -32,6 +31,7 @@ export interface Experience {
   tier?: number;
   priority?: number;
   dropTimes?: string[];
+  highlight?: boolean;
 }
 
 type ParkData = Omit<Park, 'dropTimes'>;

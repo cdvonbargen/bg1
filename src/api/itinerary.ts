@@ -441,7 +441,6 @@ export class ItineraryClient extends ApiClient {
           geo: { n: 0, s: 0, e: 0, w: 0 },
           theme: DEFAULT_THEME,
           dropTimes: [],
-          waitThreshold: 0,
         };
       }
       throw error;
