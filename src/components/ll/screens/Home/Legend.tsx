@@ -28,8 +28,8 @@ export function Symbol({
 }) {
   return (
     <tr>
-      <th className="py-0.5 text-center font-bold">{sym}</th>
-      <td className="pl-3 py-0.5">{def}</td>
+      <th className="text-center font-bold">{sym}</th>
+      <td className="pl-3">{def}</td>
       {onInfo && (
         <td className="pl-3 py-0.5">
           <Button type="small" onClick={onInfo}>
