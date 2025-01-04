@@ -8,6 +8,7 @@ import Tab from '@/components/Tab';
 import DasPartiesContext from '@/contexts/DasPartiesContext';
 import ExperiencesContext from '@/contexts/ExperiencesContext';
 import NavContext from '@/contexts/NavContext';
+import ThemeContext from '@/contexts/ThemeContext';
 import { displayTime } from '@/datetime';
 
 import DasPartyList from '../DasPartyList';
@@ -115,11 +116,19 @@ const Experiences = memo(function Experiences({
         </div>
       ))}
       {experiences.length > 0 && (
-        <Legend>
-          <Symbol sym="–" def="No posted wait/show time" />
-          <Symbol sym="❌" def="Temporarily down" />
-          <Symbol sym="VQ" def="Virtual queue" />
-        </Legend>
+        <>
+          <Legend>
+            <Symbol sym="–" def="No posted wait/show time" />
+            <Symbol sym="❌" def="Temporarily down" />
+            <Symbol sym="VQ" def="Virtual queue" />
+          </Legend>
+          <p className="text-sm text-center">
+            <span className={`${use(ThemeContext).text} font-bold`}>
+              Popular attractions
+            </span>{' '}
+            are shown in bold
+          </p>
+        </>
       )}
     </>
   );
