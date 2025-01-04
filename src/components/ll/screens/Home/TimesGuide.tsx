@@ -116,7 +116,7 @@ const Experiences = memo(function Experiences({
       ))}
       {experiences.length > 0 && (
         <Legend>
-          <Symbol sym="*" def="No posted wait/show time" />
+          <Symbol sym="–" def="No posted wait/show time" />
           <Symbol sym="❌" def="Temporarily down" />
           <Symbol sym="VQ" def="Virtual queue" />
         </Legend>
@@ -165,7 +165,7 @@ function ExperienceList({
                     displayTime(exp.standby.nextShowTime)
                   )
                 ) : exp.standby.available ? (
-                  (exp.standby.waitTime ?? '*')
+                  (exp.standby.waitTime ?? '–')
                 ) : exp.virtualQueue &&
                   exp.standby.unavailableReason === 'NOT_STANDBY_ENABLED' ? (
                   'VQ'

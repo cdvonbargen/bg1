@@ -25,7 +25,7 @@ function expectTimes(def: { [key: string]: { [key: string]: Experience[] } }) {
               (exp.standby.nextShowTime
                 ? displayTime(exp.standby.nextShowTime)
                 : exp.standby.available
-                  ? '*'
+                  ? '–'
                   : '❌')
           ),
           exp.name +

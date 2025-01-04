@@ -38,7 +38,7 @@ const AverageWait = ({
           <abbr title="Virtual queue">VQ</abbr>
         ) : (
           <abbr title="Not applicable" className="px-1">
-            *
+            –
           </abbr>
         )
       }
