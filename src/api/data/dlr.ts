@@ -160,12 +160,14 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.8124801, -117.9205132],
     priority: 3.0,
     highlight: true,
+    dropTimes: ['11:27', '12:27', '13:27', '14:27', '15:27', '16:27', '17:27', '18:27', '10:57', '11:57', '12:57', '13:57', '14:57', '15:57', '16:57', '17:57', '18:57'],
   },
   353301: {
     name: 'Buzz Lightyear Astro Blasters',
     land: tomorrowland,
     geo: [33.8122751, -117.9181819],
     highlight: true,
+    dropTimes: ['10:52', '11:52', '12:52', '13:52', '14:52', '15:52', '16:52', '17:52', '18:52'],
   },
   353305: {
     name: 'Casey Jr. Circus Train',
@@ -221,6 +223,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.811616, -117.9218924],
     priority: 3.0,
     highlight: true,
+    dropTimes: ['10:57', '11:57', '12:57', '13:57', '14:57', '15:57', '16:57', '17:57', '18:57'],
   },
   18249927: {
     name: 'Haunted Mansion Holiday',
@@ -235,6 +238,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.8114097, -117.9204077],
     priority: 1.1,
     highlight: true,
+    dropTimes: ['10:57', '11:57', '12:57', '13:57', '14:57', '15:57', '16:57', '17:57', '18:57'],
   },
   367492: {
     name: "it's a small world",
@@ -300,12 +304,14 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.8154852, -117.9183938],
     priority: 2.1,
     highlight: true,
+    dropTimes: ['10:42', '11:42','12:42','13:42','14:42','15:42','16:42','17:42'],
   },
   19193459: {
     name: 'Millennium Falcon: Smugglers Run',
     land: starWars,
     geo: [33.8153228, -117.922197],
     highlight: true,
+    dropTimes: ['10:52', '11:52', '12:52', '13:52', '14:52', '15:52', '16:52', '17:52', '18:52'],
   },
   353389: {
     name: "Mr. Toad's Wild Ride",
@@ -331,6 +337,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.811295, -117.9209785],
     priority: 3,
     highlight: true,
+    dropTimes: ['10:47', '11:47', '12:47', '13:47', '14:47', '15:47', '16:47', '17:47'],
   },
   411973631: {
     name: 'Queenie & the Jambalaya Jazz Band',
@@ -341,6 +348,7 @@ export const experiences: ResortData['experiences'] = {
     land: starWars,
     geo: [33.8135671, -117.9236346],
     highlight: true,
+    dropTimes: ['11:32', '13:32', '15:32'],
   },
   353421: {
     name: "Roger Rabbit's Car Toon Spin",
@@ -348,6 +356,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.8155682, -117.9181205],
     priority: 3.1,
     highlight: true,
+    dropTimes: ['10:52', '11:52', '12:52', '13:52', '14:52', '15:52', '16:52'],
   },
   353429: {
     name: "Snow White's Enchanted Wish",
@@ -359,6 +368,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.8112647, -117.9175892],
     priority: 2.0,
     highlight: true,
+    dropTimes: ['09:52', '10:52', '11:52', '12:52', '13:52', '14:52', '15:52', '16:52', '17:52', '18:52'],
   },
   18237368: {
     name: 'Hyperspace Mountain',
@@ -371,6 +381,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Star Tours',
     land: tomorrowland,
     geo: [33.8119436, -117.9182118],
+    dropTimes: ['10:52', '11:52', '12:52', '13:52', '14:52', '15:52', '16:52', '17:52'],
   },
   353443: {
     name: 'Storybook Land Canal Boats',
@@ -450,6 +461,7 @@ export const experiences: ResortData['experiences'] = {
     name: 'Grizzly River Run',
     land: grizzly,
     geo: [33.8069638, -117.9212689],
+    dropTimes: ['11:02', '12:02', '13:02', '14:02', '15:02', '16:02', '17:02', '18:02'],
   },
   353451: {
     name: 'Guardians of the Galaxy - Mission: BREAKOUT',
@@ -457,6 +469,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.8068606, -117.9172434],
     priority: 1.1,
     highlight: true,
+    dropTimes: ['09:52', '10:52', '11:52', '12:52', '13:52', '14:52', '15:52', '16:52', '17:52', '18:52', '10:22', '11:22', '12:22', '13:22', '14:22', '15:22', '16:22', '17:22', '18:22'],
   },
   18774860: {
     name: 'Guardians of the Galaxy - Monsters After Dark',
@@ -541,6 +554,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.8081471, -117.9175137],
     priority: 3.2,
     highlight: true,
+    dropTimes: ['10:52', '11:52', '12:52', '13:52', '14:52', '15:52', '16:52'],
   },
   353379: {
     name: 'Pixar Pal-A-Round - Swinging',
@@ -551,6 +565,7 @@ export const experiences: ResortData['experiences'] = {
     land: cars,
     geo: [33.8052475, -117.9198715],
     highlight: true,
+    dropTimes: ['10:32', '11:32', '12:32', '13:32', '14:32', '15:32', '16:32', '17:32', '18:32'],
   },
   353413: {
     name: 'Redwood Creek Challenge Trail',
@@ -566,6 +581,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.8085516, -117.9204917],
     priority: 3.0,
     highlight: true,
+    dropTimes: ['10:02', '11:02', '12:02', '13:02', '14:02', '15:02', '16:02', '17:02', '18:02'],
   },
   19324604: {
     name: "Soarin' Over California",
@@ -592,6 +608,7 @@ export const experiences: ResortData['experiences'] = {
     geo: [33.8067598, -117.91849],
     priority: 2.0,
     highlight: true,
+    dropTimes: ['10:52', '11:52', '12:52', '13:52', '14:52', '15:52', '16:52', '17:52', '18:52', '11:22', '12:22', '13:22', '14:22', '15:22', '16:22', '17:22', '18:22'],
   },
   411805943: {
     name: 'Wondrous Journeys (Fireworks)',
